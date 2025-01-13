@@ -6,6 +6,5 @@
 //
 
 import Foundation
-import Markdown
 
-
+public struct SSMarkdownParser {}
