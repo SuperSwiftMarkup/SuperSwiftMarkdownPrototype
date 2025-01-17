@@ -17,6 +17,13 @@ extension SSMarkdownParser {
     }
 }
 
+extension SSDocument {
+    public static func parseFrom(source: String) -> SSDocument {
+        let nodes = SSMarkdownParser.parse(source: source)
+        return SSDocument(nodes: nodes)
+    }
+}
+
 //fileprivate extension SSMarkdownAST {
 //    static func `try`(from element: Markdown.Markup) -> SSMarkdownAST? {
 //        if let blockMarkup = element as? Markdown.BlockMarkup {
@@ -249,6 +256,6 @@ fileprivate extension SSInline.SymbolLinkNode {
 }
 fileprivate extension SSInline.TextNode {
     static func `try`(from element: Markdown.Text) -> SSInline.TextNode? {
-        return SSInline.TextNode.init(string: element.string)
+        return SSInline.TextNode.init(value: element.string)
     }
 }

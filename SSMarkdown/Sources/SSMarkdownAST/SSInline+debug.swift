@@ -108,7 +108,7 @@ extension SSInline.SymbolLinkNode: ToPrettyTree {
 }
 extension SSInline.TextNode: ToPrettyTree {
     public var asPrettyTree: PrettyTree {
-        return .init(string: self.string)
+        return .init(string: self.value)
     }
 }
 

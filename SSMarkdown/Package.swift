@@ -5,6 +5,10 @@ import PackageDescription
 
 let package = Package(
     name: "SSMarkdown",
+    platforms: [
+        .iOS(.v17),
+        .macOS(.v14),
+    ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(name: "SSMarkdown", targets: ["SSMarkdown"]),
@@ -22,20 +26,17 @@ let package = Package(
             .product(name: "Markdown", package: "swift-markdown"),
             "SwiftPrettyTree"
         ]),
-        .target(name: "SSMarkdownStorage"),
-        .target(name: "SSMarkdownDocument", dependencies: [
+        .target(name: "SSMarkdownStorage", dependencies: [
             "SSMarkdownAST",
         ]),
         .target(name: "SSMarkdown", dependencies: [
             "SSMarkdownAST",
             "SSMarkdownStorage",
-            "SSMarkdownDocument",
         ]),
         .testTarget(name: "SSMarkdownTests", dependencies: ["SSMarkdown"]),
         .executableTarget(name: "Development", dependencies: [
             "SSMarkdownAST",
             "SSMarkdownStorage",
-            "SSMarkdownDocument",
             "SSMarkdown",
             "SwiftPrettyTree"
         ]),

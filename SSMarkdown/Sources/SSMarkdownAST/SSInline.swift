@@ -79,7 +79,7 @@ extension SSInline {
         public var inlineLeaf: SSInline.Leaf { .symbolLink(self) }
     }
     public struct TextNode: SomeInlineLeafNode {
-        public let string: String
+        public let value: String
         public var inlineLeaf: SSInline.Leaf { .text(self) }
     }
 }

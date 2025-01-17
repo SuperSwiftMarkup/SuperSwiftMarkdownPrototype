@@ -75,7 +75,12 @@ extension SSBlock {
 // MARK: COMMON
 extension SSBlock.HeadingNode {
     public enum Level: Equatable {
-        case h1, h2, h3, h4, h5, h6
+        case h1
+        case h2
+        case h3
+        case h4
+        case h5
+        case h6
     }
 }
 
