@@ -15,11 +15,10 @@ import UIKit
 
 extension SSDocument {
     public func attributedString(styling: SSDocumentStyling) -> NSAttributedString {
-//        let attributedString = NSMutableAttributedString.init(<#T##attrStr: AttributedString##AttributedString#>, including: <#T##KeyPath<AttributeScopes, AttributeScope.Type>#>)
         self.nodes
             .map {
 //                print("HERE: \($0)")
-                return $0.attributedString(styling: styling, environment: .default).with(append: "\n")
+                return $0.attributedString(styling: styling, environment: .default)
             }
             .join(leading: nil, contentStyling: nil, trailing: nil)
     }

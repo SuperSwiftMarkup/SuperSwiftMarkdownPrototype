@@ -99,8 +99,8 @@ extension SSBlock.ListItemNode: ToPrettyTree {
     public var asPrettyTree: PrettyTree {
         let children = self.children.map { $0.asPrettyTree }
         let label: String
-        if let checkbox = self.checkbox.map({ $0.string }) {
-            label = "ListItemNode[\(checkbox)]"
+        if let checkbox = self.checkbox.map({ $0.displayString }) {
+            label = "ListItemNode \(checkbox)"
         } else {
             label = "ListItemNode"
         }
@@ -115,12 +115,8 @@ extension SSBlock.ListItemNode: ToPrettyTree {
     }
 }
 extension SSBlock.ListItemNode.Checkbox: ToPrettyTree {
-    public var asPrettyTree: PrettyTree { PrettyTree(value: string) }
-    public var string: String {
-        switch self {
-        case .checked: return "checked"
-        case .unchecked: return "unchecked"
-        }
+    public var asPrettyTree: PrettyTree {
+        PrettyTree(value: self.displayString)
     }
 }
 extension SSBlock.InlineContainerBlock: ToPrettyTree {

@@ -10,6 +10,8 @@ import Foundation
 public struct SSDocumentStyling {
     let block: Block
     let inline: Inline
+    let deemphasizedSyntaxColor: XColor = XColor.lightGray
+    let prominentSyntaxColor: XColor = XColor.darkGray
     
     public init(
         block: Block,
@@ -47,39 +49,43 @@ extension SSDocumentStyling {
                     h1: .init(
                         font: .init(size: 20, weight: .black, design: .default),
                         foregroundColor: foregroundColor,
-                        showSyntax: showSyntax
+                        showSyntax: true
                     ),
                     h2: .init(
                         font: .init(size: 18, weight: .heavy, design: .default),
                         foregroundColor: foregroundColor,
-                        showSyntax: showSyntax
+                        showSyntax: true
                     ),
                     h3: .init(
                         font: .init(size: 16, weight: .bold, design: .default),
                         foregroundColor: foregroundColor,
-                        showSyntax: showSyntax
+                        showSyntax: true
                     ),
                     h4: .init(
                         font: .init(size: 14, weight: .semibold, design: .default),
                         foregroundColor: foregroundColor,
-                        showSyntax: showSyntax
+                        showSyntax: true
                     ),
                     h5: .init(
                         font: .init(size: 12, weight: .medium, design: .default),
                         foregroundColor: foregroundColor,
-                        showSyntax: showSyntax
+                        showSyntax: true
                     ),
                     h6: .init(
                         font: .init(size: 10, weight: .regular, design: .default),
                         foregroundColor: foregroundColor,
-                        showSyntax: showSyntax
+                        showSyntax: true
                     )
                 ),
-                hTMLBlock: .init(font: defaultFont, foregroundColor: foregroundColor, showSyntax: showSyntax),
+                hTMLBlock: .init(
+                    font: .init(size: defaultFont.size, weight: .light, design: .monospaced),
+                    foregroundColor: foregroundColor,
+                    showSyntax: showSyntax
+                ),
                 thematicBreak: .init(font: defaultFont, foregroundColor: foregroundColor, showSyntax: showSyntax),
                 codeBlock: .init(
                     font: Font(size: 14, weight: .regular, design: .monospaced),
-                    foregroundColor: foregroundColor,
+                    foregroundColor: XColor.darkGray,
                     showSyntax: true
                 )
             ),

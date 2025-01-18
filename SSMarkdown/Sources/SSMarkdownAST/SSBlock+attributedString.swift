@@ -37,75 +37,138 @@ extension SSBlock.BlockContainerBlock {
 }
 extension SSBlock.BlockQuoteNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let blockQuote = NSMutableAttributedString(
-            attributedString: children
-                .map { $0.attributedString(styling: styling, environment: environment) }
-                .join(leading: nil, contentStyling: nil, trailing: nil)
-        )
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 10
-        paragraphStyle.headIndent = 10
-        blockQuote.addAttribute(.paragraphStyle, value: paragraphStyle, range: blockQuote.range)
-//        let result = NSTextStorage(attributedString: blockQuote)
-//        return NSAttributedString.init(blockQuote, including: \FoundationAttributes.LinkAttribute.self)
-        return blockQuote
-    }
-}
-extension SSBlock.OrderedListNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.block.orderedList
-        return self.items
+        let nodeStyling = styling.block.blockQuote
+        let environment = environment
+            .withScope(.block(.blockQuote))
+//            .mapLineIndent(default: 0, transform: { $0 + 20 })
+            .withFont(ifUndefined: nodeStyling.font)
+        return children
             .map { $0.attributedString(styling: styling, environment: environment) }
-            .enumerated()
-            .map { (ix, item) in
-                let ix = NSAttributedString(string: "\(ix + 1). ", attributes: nodeStyling.systemAttributes)
-                return [ ix, item ].join()
-            }
             .join(
                 leading: nil,
                 contentStyling: nil,
-                trailing: nil
+                trailing: environment.disableTrailingBlockNewline ? nil : NSAttributedString.newline
+            )
+    }
+}
+
+// MARK: - LIST NODES -
+
+extension SSBlock.OrderedListNode {
+    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = styling.block.orderedList
+        let environment = environment
+            .withScope(.block(.orderedList))
+            .withFont(ifUndefined: nodeStyling.font)
+//            .mapLineIndent(default: 0, transform: { $0 + 10 })
+//            .withLineIndent(ifUndefined: 0)
+//            .withExtraWrapLineIndent(12)
+//        if environment.containsScope(block: .listItem) {
+//            environment = environment.mapLineIndent(default: 0, transform: { $0 + 20 })
+//        }
+        return self.items
+            .enumerated()
+            .map { (ix, item) in
+                item.attributedString(styling: styling, environment: environment, listType: .ordered(count: ix + 1))
+            }
+            .join(
+                separatedBy: NSAttributedString.newline,
+                endWith: environment.disableTrailingBlockNewline ? nil : NSAttributedString.newline
             )
     }
 }
 extension SSBlock.UnorderedListNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
         let nodeStyling = styling.block.unorderedList
+        let environment = environment
+            .withScope(.block(.unorderedList))
+            .withFont(ifUndefined: nodeStyling.font)
+//            .mapLineIndent(default: 0, transform: { $0 + 10 })
+//            .withLineIndent(ifUndefined: 0)
+//            .withExtraWrapLineIndent(12)
+//        if environment.containsScope(block: .listItem) {
+//            environment = environment.mapLineIndent(default: 0, transform: { $0 + 20 })
+//        }
         return self.items
-            .map { $0.attributedString(styling: styling, environment: environment) }
             .map {
-                let ix = NSAttributedString(string: "- ", attributes: nodeStyling.systemAttributes)
-                return [ ix, $0 ].join()
+                $0.attributedString(styling: styling, environment: environment, listType: .unordered)
             }
             .join(
-                leading: nil,
-                contentStyling: nil,
-                trailing: nil
+                separatedBy: NSAttributedString.newline,
+                endWith: environment.disableTrailingBlockNewline ? nil : NSAttributedString.newline
             )
     }
 }
 
 extension SSBlock.ListItemNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let checkbox = self.checkbox.map { $0.attributedString(styling: styling, environment: environment).with(append: " ") }
+    public func attributedString(
+        styling: SSDocumentStyling,
+        environment: SSStyleEnvironment,
+        listType: ListItemType
+    ) -> NSAttributedString {
+        // MARK: HEADER
+        let beginTokenAttributes = environment
+            .mapExtraWrapLineIndent(default: 0, transform: { $0 + 30 })
+            .mapFont(default: nil, transform: { $0.withDesign(.monospaced).withWeight(.light) })
+            .withForegroundColor(styling.prominentSyntaxColor)
+            .systemAttributes
+        let beginTokenString = [ .some(listType.displayString), self.checkbox?.displayString ]
+            .compactMap { $0 }
+            .joined(separator: " ")
+            .with(append: " ")
+            .intoAttributedString(attributes: beginTokenAttributes)
+        // MARK: CHILDREN
+//        let fontSize = environment.font?.size ?? styling.block.listItem.font.size
+//        let headerStringFontLength = CGFloat(beginTokenString.length) * fontSize
+        let environment = environment
+            .withScope(.block(.listItem))
+            .mapFont(default: styling.block.listItem.font, transform: { $0.withDesign(.monospaced) })
+            .mapLineIndent(default: 0) { $0 + 30 }
+//            .mapExtraWrapLineIndent(default: 0, transform: { $0 + 30 })
+//            .mapLineIndent(default: 0) { $0 + headerStringFontLength }
+//            .mapExtraWrapLineIndent(default: 0, transform: { $0 + headerStringFontLength })
+//            .mapExtraWrapLineIndent(default: 0) { $0 + headerStringFontLength }
         return self.children
-            .map { $0.attributedString(styling: styling, environment: environment) }
-            .join(leading: checkbox)
+            .enumerated()
+            .map { (index, child) in
+                if index == 0 {
+                    child.attributedString(styling: styling, environment: environment)
+                } else {
+                    child.attributedString(styling: styling, environment: environment)
+                }
+            }
+//            .join(leading: beginTokenString, contentStyling: nil, trailing: nil)
+            .join(
+                startWith: beginTokenString,
+                separatedBy: NSAttributedString.newline,
+                endWith: environment.disableTrailingBlockNewline ? nil : NSAttributedString.newline
+            )
     }
 }
 extension SSBlock.ListItemNode.Checkbox {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.block.listItem
+    internal var displayString: String {
         switch self {
-        case .checked: return NSAttributedString(string: "[x]", attributes: nodeStyling.systemAttributes)
-        case .unchecked: return NSAttributedString(string: "[ ]", attributes: nodeStyling.systemAttributes)
+        case .checked: return "[x]"
+        case .unchecked: return "[ ]"
+        }
+    }
+}
+extension SSBlock.ListItemNode.ListItemType {
+    internal var displayString: String {
+        switch self {
+        case .ordered(let count): return "\(count)."
+        case .unordered: return "-"
         }
     }
 }
 
+// MARK: - TABLE NODES -
+
 extension SSBlock.TableNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+//        let environment = environment.withScope(.block(.table))
         return NSAttributedString.init(string: "<<TODO>>", attributes: [:])
+            .with(append: NSAttributedString.newline)
     }
 }
 extension SSBlock.TableNode.Head {
@@ -146,39 +209,82 @@ extension SSBlock.InlineContainerBlock {
 }
 extension SSBlock.ParagraphNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let paragraph = self.children
+        var environment = environment
+            .withFont(styling.block.paragraph.font)
+            .withScope(.block(.paragraph))
+            .mapFont(default: nil, transform: { $0.withDesign(.monospaced) })
+//            .mapExtraWrapLineIndent(default: 0, transform: { $0 + 20 })
+//        if environment.containsScope(block: .listItem) {
+//            environment = environment
+//                .mapLineIndent(default: 0, transform: { $0 + 30 })
+//                .mapExtraWrapLineIndent(default: 0, transform: { $0 + 30 })
+//        }
+        return self.children
             .map { $0.attributedString(styling: styling, environment: environment) }
-            .join(leading: nil, contentStyling: nil, trailing: nil)
-            .with(append: "\n")
-//        let mutableParagraph = NSMutableAttributedString(attributedString: paragraph)
-//        let paragraphStyle = NSMutableParagraphStyle()
-//        paragraphStyle.lineBreakMode = .byCharWrapping
-//        mutableParagraph.addAttribute(.paragraphStyle, value: paragraphStyle, range: mutableParagraph.range)
-        return paragraph
+            .join(
+                leading: nil,
+                contentStyling: nil,
+                trailing: environment.disableTrailingBlockNewline ? nil : NSAttributedString.newline,
+                finalizeWith: {
+                    let _ = $0
+                    $0.add(attributes: environment.blockLevelSystemAttributes)
+                }
+            )
     }
 }
 extension SSBlock.HeadingNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let levelStyling = styling.block.heading.styling(for: self.level)
-        let systemAttributes = levelStyling.systemAttributes
-        let level = NSAttributedString(attributedString: self.level.attributedString(styling: styling, environment: environment)).with(append: " ")
+        let nodeStyling = styling.block.heading.styling(for: self.level)
+        let font = nodeStyling.font
+        let beginToken = self.level
+            .attributedString(styling: styling, environment: environment)
+            .with(append: NSAttributedString(string: " "))
+//        let beginTokenFontLength = CGFloat(beginToken.length) * font.size
+        let environment = environment
+            .withScope(.block(.heading(self.level)))
+            .withFont(font)
+            .mapFont(default: nil, transform: { $0.withDesign(.monospaced) })
+//            .mapLineIndent(default: 0, transform: { $0 + 20 })
+            .mapExtraWrapLineIndent(default: 0, transform: { $0 + 20 + CGFloat(5 * self.level.asUInt8) })
+//            .mapLineIndent(default: 0, transform: { $0 +  })
         return self.children
             .map { $0.attributedString(styling: styling, environment: environment) }
-            .join(leading: levelStyling.showSyntax ? level : nil, contentStyling: systemAttributes, trailing: nil)
-            .with(append: "\n")
+            .join(
+                leading: nodeStyling.showSyntax ? beginToken : nil,
+                contentStyling: nil,
+                trailing: environment.disableTrailingBlockNewline ? nil : NSAttributedString.newline,
+                finalizeWith: {
+                    let _ = $0
+                    $0.add(attributes: environment.blockLevelSystemAttributes)
+                }
+            )
     }
 }
 extension SSBlock.HeadingNode.Level {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
         let nodeStyling = styling.block.heading.styling(for: self)
-        let attributes = nodeStyling.systemAttributes
+        let environment = environment
+        let systemAttributes = environment
+            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .mapFont(default: nodeStyling.font) { $0.withDesign(.monospaced).withWeight(.thin) }
+            .inlineLevelSystemAttributes
         switch self {
-        case .h1: return .init(string: "#", attributes: attributes)
-        case .h2: return .init(string: "##", attributes: attributes)
-        case .h3: return .init(string: "###", attributes: attributes)
-        case .h4: return .init(string: "####", attributes: attributes)
-        case .h5: return .init(string: "#####", attributes: attributes)
-        case .h6: return .init(string: "######", attributes: attributes)
+        case .h1: return .init(string: "#", attributes: systemAttributes)
+        case .h2: return .init(string: "##", attributes: systemAttributes)
+        case .h3: return .init(string: "###", attributes: systemAttributes)
+        case .h4: return .init(string: "####", attributes: systemAttributes)
+        case .h5: return .init(string: "#####", attributes: systemAttributes)
+        case .h6: return .init(string: "######", attributes: systemAttributes)
+        }
+    }
+    internal var displayString: String {
+        switch self {
+        case .h1: return "#"
+        case .h2: return "##"
+        case .h3: return "###"
+        case .h4: return "####"
+        case .h5: return "#####"
+        case .h6: return "######"
         }
     }
 }
@@ -197,56 +303,50 @@ extension SSBlock.LeafBlock {
 extension SSBlock.HTMLBlockNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
         let nodeStyling = styling.block.hTMLBlock
-        return NSAttributedString(
-            string: rawHTML,
-            attributes: nodeStyling.systemAttributes
-        )
+        let environment = environment
+            .withScope(.block(.htmlBlock))
+            .withFont(ifUndefined: nodeStyling.font)
+            .mapFont(default: nil, transform: { $0.withDesign(.monospaced) })
+        let systemAttributes = environment.systemAttributes
+        return NSAttributedString( string: rawHTML, attributes: systemAttributes )
+            .with(append: NSAttributedString.newline)
     }
 }
 extension SSBlock.ThematicBreakNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
         let nodeStyling = styling.block.thematicBreak
+        let environment = environment
+            .withScope(.block(.thematicBreak))
+            .withFont(ifUndefined: nodeStyling.font)
+        let systemAttributes = environment.systemAttributes
         let divider = NSMutableAttributedString(
             string: "---",
-            attributes: nodeStyling.systemAttributes
+            attributes: systemAttributes
         )
-        let paragraphStyle = NSMutableParagraphStyle()
-//        paragraphStyle.alignment = .right
-        divider.addAttribute(.paragraphStyle, value: paragraphStyle, range: divider.range)
-        return divider.with(append: "\n")
+        return divider.with(append: NSAttributedString.newline)
     }
 }
 extension SSBlock.CodeBlockNode {
     public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-//        print("code", code.debugDescription)
         let nodeStyling = styling.block.codeBlock
-        let token = NSAttributedString(string: "```\n", attributes: nodeStyling.systemAttributes)
-        let code = NSAttributedString(string: code, attributes: nodeStyling.systemAttributes)
-        let codeBlock = NSMutableAttributedString(
-            attributedString: nodeStyling.showSyntax ? code.wrap(open: token, close: token) : code
-        )
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.firstLineHeadIndent = 10
-        paragraphStyle.headIndent = 10
-        codeBlock.addAttribute(.paragraphStyle, value: paragraphStyle, range: codeBlock.range)
-        return codeBlock
-//        let resultMut = NSMutableAttributedString(attributedString: result)
-//        let paragraphStyle = NSParagraphStyle()
-//        final.addAttribute(.paragraphStyle, value: paragraphStyle, range: final.range)
-        // - -
-//        let result = NSTextStorage.init(attributedString: final)
-//        let sorage = CodeBlockStorage.init(attributedString: NSAttributedString())
-//        sorage.beginEditing()
-//        sorage.paragraphs = [ NSTextStorage.init(attributedString: result) ]
-//        sorage.endEditing()
-//        result.paragraphs = [ NSTextStorage(attributedString: final) ]
-//        result.paragraphs
-//        if result.paragraphs.count != 1 {
-//            print("result.paragraphs.count", result.paragraphs.count)
-//        }
-//        assert(result.paragraphs.count == 1)
-//        result.paragraphs = [ NSTextStorage(attributedString: final) ]
-//        return sorage
+        let environment = environment
+            .withScope(.block(.codeBlock))
+            .mapLineIndent(default: 0, transform: { $0 + 20 })
+            .mapFont(default: nodeStyling.font) { $0.withDesign(.monospaced) }
+        let systemAttributes = environment
+            .withForegroundColor(nodeStyling.foregroundColor)
+            .systemAttributes
+        let syntaxSystemAttributes = environment
+            .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
+            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .systemAttributes
+        let token = NSAttributedString(string: "```\n", attributes: syntaxSystemAttributes)
+        let code = NSAttributedString(string: code, attributes: systemAttributes)
+        return nodeStyling.showSyntax
+            ? code
+                .wrap(open: token, close: token)
+            : code
+                .with(append: NSAttributedString.newline)
     }
 }
 

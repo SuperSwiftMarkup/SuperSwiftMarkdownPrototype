@@ -73,7 +73,10 @@ internal class TextLayoutFragmentLayer: CALayer {
         }
         bounds = CGRect(
             origin: .init( x: min(-5, bounds.minX), y: bounds.minY ),
-            size: .init( width: max(10, bounds.width), height: bounds.height )
+            size: .init(
+                width: max(10, bounds.width + 20), // ADD 20 PTS TO bounds.width - FIXES CLIPED MONOSPACE TEXT AT END OF LINE
+                height: bounds.height
+            )
         )
         // The (0, 0) point in layer space should be the anchor point.
         anchorPoint = CGPoint(x: -bounds.origin.x / bounds.size.width, y: -bounds.origin.y / bounds.size.height)
@@ -167,31 +170,62 @@ internal class TextLayoutFragmentLayer: CALayer {
         layoutFragment.draw(at: .init(x: self.padding, y: 0), in: context)
     }
     private func drawBackgroundDebug(context: CGContext) {
+//        let colors: [NSColor] = [
+//            NSColor.systemRed,
+//            NSColor.systemGreen,
+//            NSColor.systemBlue,
+//            NSColor.systemOrange,
+//            NSColor.systemYellow,
+//            NSColor.systemBrown,
+//            NSColor.systemPink,
+//            NSColor.systemPurple,
+//            NSColor.systemGray,
+//            NSColor.systemTeal,
+//            NSColor.systemIndigo,
+//            NSColor.systemMint,
+//            NSColor.systemCyan,
+//        ]
+//        context.saveGState()
+//        let color = colors.randomElement()!.withAlphaComponent(0.08)
+//        context.saveGState()
+//        context.setFillColor(color.cgColor)
+//        context.fill([ self.bounds ])
+//        context.restoreGState()
+        
+        // LINE FRAGMENTS DEBUG
         context.saveGState()
-        let colors: [NSColor] = [
-            NSColor.systemRed,
-            NSColor.systemGreen,
-            NSColor.systemBlue,
-            NSColor.systemOrange,
-            NSColor.systemYellow,
-            NSColor.systemBrown,
-            NSColor.systemPink,
-            NSColor.systemPurple,
-            NSColor.systemGray,
-            NSColor.systemTeal,
-            NSColor.systemIndigo,
-            NSColor.systemMint,
-            NSColor.systemCyan,
-        ]
-        let color = colors.randomElement()!.withAlphaComponent(0.1)
-        context.saveGState()
-        context.setFillColor(color.cgColor)
-        context.fill([ self.bounds ])
+//        context.translateBy(x: padding, y: 0)
+        for (index, line) in self.layoutFragment.textLineFragments.enumerated() {
+//            let isEven = index % 2 == 0
+            let strokeWidth = 1.0
+            let inset = 0.5 * strokeWidth
+            context.setLineWidth(strokeWidth)
+            let color1 = NSColor.blue.withAlphaComponent(0.8)
+            let color2 = NSColor.systemPink.withAlphaComponent(0.8)
+            let color = index == 0 ? color1 : color2
+            let bounds = CGRect(
+                origin: .init(
+                    x: line.typographicBounds.origin.x + padding,
+                    y: line.typographicBounds.origin.y
+                ),
+                size: .init(
+                    width: line.typographicBounds.size.width,
+                    height: line.typographicBounds.size.height
+                )
+            )
+            context.setStrokeColor(color.cgColor)
+            context.setLineDash(phase: 1, lengths: [ strokeWidth, strokeWidth ])
+            context.stroke(
+                bounds
+//                    .insetBy(dx: inset, dy: inset)
+//                    .offsetBy(dx: padding - (inset * 2), dy: 0)
+            )
+        }
         context.restoreGState()
     }
     private func drawForegroundDebug(context: CGContext) {
         context.saveGState()
-        context.setFillColor(NSColor.red.withAlphaComponent(0.9).cgColor)
+        context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
         let circle = CGPath.init(
             ellipseIn: CGRect(x: -5, y: (bounds.height * 0.5) - 2.5, width: 5, height: 5),
             transform: nil
@@ -199,40 +233,29 @@ internal class TextLayoutFragmentLayer: CALayer {
         context.addPath(circle)
         context.fillPath()
         context.restoreGState()
-        
-        // LAYOUT FRAMES DEBUG
-        if showLayerFrames {
-            let inset = 0.5 * strokeWidth
-            // Draw rendering surface bounds.
-            context.setLineWidth(0.5)
-            context.setStrokeColor(renderingSurfaceBoundsStrokeColor.withAlphaComponent(0.5).cgColor)
-            context.setLineDash(phase: 0, lengths: []) // Solid line.
-            context.stroke(layoutFragment.renderingSurfaceBounds.insetBy(dx: inset, dy: inset))
-            
-            // Draw typographic bounds.
-            context.setStrokeColor(typographicBoundsStrokeColor.withAlphaComponent(0.5).cgColor)
-            context.setLineDash(phase: 0, lengths: [strokeWidth, strokeWidth]) // Square dashes.
-            var typographicBounds = layoutFragment.layoutFragmentFrame
-            typographicBounds.origin = .zero
-            context.stroke(typographicBounds.insetBy(dx: inset, dy: inset))
-        }
-        context.restoreGState()
-        
-        // LINE FRAGMENTS DEBUG
-        context.saveGState()
-        for line in self.layoutFragment.textLineFragments {
-            let strokeWidth = 0.5
-            let inset = 0.5 * strokeWidth
-            context.setLineWidth(strokeWidth)
-            context.setStrokeColor(renderingSurfaceBoundsStrokeColor.withAlphaComponent(0.5).cgColor)
-            context.setLineDash(phase: 1, lengths: []) // Solid line.
-            context.stroke(line.typographicBounds.insetBy(dx: inset, dy: inset))
-        }
-        context.restoreGState()
+
+//        // LAYOUT FRAMES DEBUG
+//        if showLayerFrames {
+//            context.saveGState()
+//            let inset = 0.5 * strokeWidth
+//            // Draw rendering surface bounds.
+//            context.setLineWidth(1)
+//            context.setStrokeColor(renderingSurfaceBoundsStrokeColor.withAlphaComponent(0.8).cgColor)
+//            context.setLineDash(phase: 0, lengths: []) // Solid line.
+//            context.stroke(layoutFragment.renderingSurfaceBounds.insetBy(dx: inset, dy: inset))
+//            
+//            // Draw typographic bounds.
+//            context.setStrokeColor(typographicBoundsStrokeColor.withAlphaComponent(0.8).cgColor)
+//            context.setLineDash(phase: 0, lengths: [strokeWidth, strokeWidth]) // Square dashes.
+//            var typographicBounds = layoutFragment.layoutFragmentFrame
+//            typographicBounds.origin = .zero
+//            context.stroke(typographicBounds.insetBy(dx: inset, dy: inset))
+//            context.restoreGState()
+//        }
     }
     
     var renderingSurfaceBoundsStrokeColor: NSColor { return .systemOrange }
-    var typographicBoundsStrokeColor: NSColor { return .systemPurple }
+    var typographicBoundsStrokeColor: NSColor { return .systemIndigo }
 }
 
 

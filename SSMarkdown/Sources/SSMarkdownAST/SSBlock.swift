@@ -51,6 +51,10 @@ extension SSBlock {
         public enum Checkbox: Equatable {
             case checked, unchecked
         }
+        public enum ListItemType: Equatable {
+            case ordered(count: Int)
+            case unordered
+        }
     }
 }
 
@@ -81,6 +85,16 @@ extension SSBlock.HeadingNode {
         case h4
         case h5
         case h6
+        var asUInt8: UInt8 {
+            switch self {
+            case .h1: return 1
+            case .h2: return 2
+            case .h3: return 3
+            case .h4: return 4
+            case .h5: return 5
+            case .h6: return 6
+            }
+        }
     }
 }
 

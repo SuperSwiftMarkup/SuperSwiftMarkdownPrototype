@@ -1,9 +1,55 @@
-# Document
+# Document — Lorem Ipsum Dollar Sum Import
 
-To Sherlock Holmes she is always the woman. I have seldom heard him mention her under any other name. In his eyes she eclipses and predominates the whole of her sex. It was not that he felt any emotion akin to love for Irene Adler. All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind. He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position.
+- To Sherlock Holmes she is always the woman.
+- I have seldom heard him mention her under any other name.
+- In his eyes she eclipses and predominates the whole of her sex.
+- It was not that he felt any emotion akin to love for Irene Adler.
+- All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.
+- He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position. 
 
-## SubDocument
-## SubSubDocument
+## SubSection - Lorem Ipsum Dollar Sum Import
+
+1. Alpha
+   ## SubList—Super hard to layout as plain text
+   - Red
+     The subject for history is not man's will itself but our presentation of it.
+   - Green
+   - Blue
+2. Beta
+   - Orange
+   - Yellow
+   - Brown
+3. Gamma
+   - Pink
+   - Purple
+   - Gray
+
+
+1. Alpha — On the eighth of September an officer--a very important one judging by the respect the guards showed him--entered the coach house where the prisoners were.
+   ## SubList—Super hard to layout as plain text
+   - Red
+     The subject for history is not man's will itself but our presentation of it.
+   - Green
+   - Blue
+2. Beta
+   - Orange
+   - Yellow
+   - Brown
+3. Gamma
+   - Pink
+   - Purple
+   - Gray
+
+> # Block Quote
+> 
+> > 4. Delta
+> >    - Teal
+> >    - Indigo
+> >    - Mint
+> >    - Cyan
+> > 5. Epsilon
+
+### SubSubSection
 
 > # Hello World
 > Hello World
@@ -11,9 +57,11 @@ To Sherlock Holmes she is always the woman. I have seldom heard him mention her 
 > code
 > ```
 > Hello World
+>
 > > Hello World
 > > ...
 > > Hello World
+> 
 > Hello World
 
 # Headers
@@ -116,7 +164,10 @@ _This is italic text_
 ```
 1. First ordered list item
 2. Another item
-⋅⋅* Unordered sub-list.
+   - Alpha!
+   - Beta!
+   - Gamma!
+   - Delta!
 1. Actual numbers don't matter, just that it's a number
 ⋅⋅1. Ordered sub-list
 4. And another item.
@@ -154,9 +205,14 @@ _This is italic text_
 
 1. First ordered list item
 2. Another item
-⋅⋅* Unordered sub-list.
+   - Alpha!
+   - Beta!
+   - Gamma!
+   - Delta!
 1. Actual numbers don't matter, just that it's a number
-⋅⋅1. Ordered sub-list
+   - Red
+   - Green
+   - Blue
 4. And another item.
 
 ⋅⋅⋅You can have properly indented paragraphs within list items. Notice the blank line above, and the leading spaces (at least one, but we'll use three here to also align the raw Markdown).

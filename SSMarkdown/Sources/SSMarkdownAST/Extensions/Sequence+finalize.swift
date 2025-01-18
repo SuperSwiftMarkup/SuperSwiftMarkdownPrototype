@@ -1,5 +1,5 @@
 //
-//  Sequence+finalize.swift
+//  Extensions/Sequence+finalize.swift
 //  
 //
 //  Created by Colbyn Wadman on 1/12/25.
