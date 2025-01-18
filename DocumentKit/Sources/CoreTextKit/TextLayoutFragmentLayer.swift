@@ -200,34 +200,39 @@ internal class TextLayoutFragmentLayer: CALayer {
             let strokeWidth = 1.0
             let inset = 0.5 * strokeWidth
             context.setLineWidth(strokeWidth)
-            let color1 = NSColor.blue.withAlphaComponent(0.8)
-            let color2 = NSColor.systemPink.withAlphaComponent(0.8)
-            let color = index == 0 ? color1 : color2
-            let bounds = CGRect(
-                origin: .init(
-                    x: line.typographicBounds.origin.x + padding,
-                    y: line.typographicBounds.origin.y
-                ),
-                size: .init(
-                    width: line.typographicBounds.size.width,
-                    height: line.typographicBounds.size.height
+            if self.bounds.width > 10 {
+                let color1 = NSColor.blue.withAlphaComponent(0.8)
+                let color2 = NSColor.systemPink.withAlphaComponent(0.8)
+                let color = index == 0 ? color1 : color2
+                let bounds = CGRect(
+                    origin: .init(
+                        x: line.typographicBounds.origin.x + padding,
+                        y: line.typographicBounds.origin.y
+                    ),
+                    size: .init(
+                        width: line.typographicBounds.size.width,
+                        height: line.typographicBounds.size.height
+                    )
                 )
-            )
-            context.setStrokeColor(color.cgColor)
-            context.setLineDash(phase: 1, lengths: [ strokeWidth, strokeWidth ])
-            context.stroke(
-                bounds
-//                    .insetBy(dx: inset, dy: inset)
-//                    .offsetBy(dx: padding - (inset * 2), dy: 0)
-            )
+                context.setStrokeColor(color.cgColor)
+                context.setLineDash(phase: 1, lengths: [ strokeWidth, strokeWidth ])
+                context.stroke(
+                    bounds.insetBy(dx: inset, dy: inset)
+                )
+            }
         }
         context.restoreGState()
     }
     private func drawForegroundDebug(context: CGContext) {
         context.saveGState()
-        context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
+        let isBlockQuote = (layoutFragment.textElement as? NSTextParagraph)?.attributedString.isOfType(markdownBlockType: .blockQuote) == true
+        if isBlockQuote {
+            context.setFillColor(NSColor.green.withAlphaComponent(0.8).cgColor)
+        } else {
+            context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
+        }
         let circle = CGPath.init(
-            ellipseIn: CGRect(x: -5, y: (bounds.height * 0.5) - 2.5, width: 5, height: 5),
+            ellipseIn: CGRect(x: -3, y: (bounds.maxY*0.5) - 3, width: 6, height: 6),
             transform: nil
         )
         context.addPath(circle)

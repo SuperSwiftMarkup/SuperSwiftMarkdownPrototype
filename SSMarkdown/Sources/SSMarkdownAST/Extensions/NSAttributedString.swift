@@ -83,6 +83,7 @@ extension Collection where Element == NSAttributedString {
 extension NSAttributedString {
     internal typealias AttributeMap = [ NSAttributedString.Key : Any ]
     internal static var newline: NSAttributedString { NSAttributedString.init(string: "\n") }
+    internal static var doubleNewline: NSAttributedString { NSAttributedString.init(string: "\n\n") }
 }
 
 extension NSAttributedString {

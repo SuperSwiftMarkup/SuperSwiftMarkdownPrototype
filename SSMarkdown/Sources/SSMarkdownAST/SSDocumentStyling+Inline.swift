@@ -77,11 +77,13 @@ extension SSDocumentStyling.Inline {
     public struct InlineCode {
         let font: SSDocumentStyling.Font
         let foregroundColor: XColor?
+        let backgroundColor: XColor?
         let showSyntax: Bool
     }
     public struct InlineHTML {
         let font: SSDocumentStyling.Font
         let foregroundColor: XColor?
+        let backgroundColor: XColor?
         let showSyntax: Bool
     }
     public struct LineBreak {
@@ -93,6 +95,7 @@ extension SSDocumentStyling.Inline {
     public struct SymbolLink {
         let font: SSDocumentStyling.Font
         let foregroundColor: XColor?
+        let backgroundColor: XColor?
         let showSyntax: Bool
     }
     public struct Text {

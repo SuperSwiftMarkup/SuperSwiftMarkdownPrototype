@@ -69,6 +69,7 @@ extension SSDocumentStyling.Block {
     public struct HTMLBlock {
         let font: SSDocumentStyling.Font
         let foregroundColor: XColor?
+        let backgroundColor: XColor?
         let showSyntax: Bool
     }
     public struct ThematicBreak {
@@ -79,6 +80,7 @@ extension SSDocumentStyling.Block {
     public struct CodeBlock {
         let font: SSDocumentStyling.Font
         let foregroundColor: XColor?
+        let backgroundColor: XColor?
         let showSyntax: Bool
     }
 }

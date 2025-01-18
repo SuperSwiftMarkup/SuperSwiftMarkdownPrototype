@@ -17,52 +17,64 @@ extension SSDocumentStyling {
             self.weight = weight
             self.design = design
         }
-        public func withSize(_ size: CGFloat) -> Self { Self.init(size: size, weight: weight, design: design) }
-        public func withWeight(_ weight: Weight) -> Self { Self.init(size: size, weight: weight, design: design) }
-        public func withDesign(_ design: Design) -> Self { Self.init(size: size, weight: weight, design: design) }
-        public enum Design {
-            case `default`
-            case monospaced
-            case rounded
-            case serif
-        }
-        public enum Weight {
-            case black
-            case heavy
-            case bold
-            case semibold
-            case medium
-            case regular
-            case light
-            case thin
-            case ultraLight
-            internal static let maximum: Weight = .black
-            internal static let minimum: Weight = .ultraLight
-            internal var increment: Weight {
-                switch self {
-                case .black: return .black
-                case .heavy: return .black
-                case .bold: return .heavy
-                case .semibold: return .bold
-                case .medium: return .semibold
-                case .regular: return .medium
-                case .light: return .regular
-                case .thin: return .light
-                case .ultraLight: return .thin
-                }
+    }
+}
+
+extension SSDocumentStyling.Font {
+    public func withSize(_ size: CGFloat) -> Self {
+        Self.init(size: size, weight: weight, design: design)
+    }
+    public func withWeight(_ weight: Weight) -> Self {
+        Self.init(size: size, weight: weight, design: design)
+    }
+    public func withDesign(_ design: Design) -> Self {
+        Self.init(size: size, weight: weight, design: design)
+    }
+    public func mapSize(_ apply: @escaping (CGFloat) -> CGFloat) -> Self {
+        Self.init(size: apply(size), weight: weight, design: design)
+    }
+    public enum Design {
+        case `default`
+        case monospaced
+        case rounded
+        case serif
+    }
+    public enum Weight {
+        case black
+        case heavy
+        case bold
+        case semibold
+        case medium
+        case regular
+        case light
+        case thin
+        case ultraLight
+        internal static let maximum: Weight = .black
+        internal static let minimum: Weight = .ultraLight
+        internal var increment: Weight {
+            switch self {
+            case .black: return .black
+            case .heavy: return .black
+            case .bold: return .heavy
+            case .semibold: return .bold
+            case .medium: return .semibold
+            case .regular: return .medium
+            case .light: return .regular
+            case .thin: return .light
+            case .ultraLight: return .thin
             }
-            internal var decrement: Weight {
-                switch self {
-                case .black: return .heavy
-                case .heavy: return .bold
-                case .bold: return .semibold
-                case .semibold: return .medium
-                case .medium: return .regular
-                case .regular: return .light
-                case .light: return .thin
-                case .thin: return .ultraLight
-                case .ultraLight: return .ultraLight
-                }
+        }
+        internal var decrement: Weight {
+            switch self {
+            case .black: return .heavy
+            case .heavy: return .bold
+            case .bold: return .semibold
+            case .semibold: return .medium
+            case .medium: return .regular
+            case .regular: return .light
+            case .light: return .thin
+            case .thin: return .ultraLight
+            case .ultraLight: return .ultraLight
             }
         }
     }
@@ -94,3 +106,44 @@ extension SSDocumentStyling.Font.Weight {
     }
 }
 
+extension SSDocumentStyling.Font {
+    public struct FontPropertyOptions: OptionSet {
+        public let rawValue: Int
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+        public typealias RawValue = Int
+        public static let size = FontPropertyOptions(rawValue: 1 << 1)
+        public static let weight = FontPropertyOptions(rawValue: 1 << 2)
+        public static let design = FontPropertyOptions(rawValue: 1 << 3)
+        internal static let keepLargerSize = FontPropertyOptions(rawValue: 1 << 4)
+    }
+    public func merge(with other: Self?, keeping: FontPropertyOptions) -> SSDocumentStyling.Font {
+        var size = keeping.contains(.size) ? self.size : ( other?.size ?? self.size)
+        if keeping.contains(.keepLargerSize) {
+            if let other = other, other.size > self.size {
+                size = other.size
+            }
+            else if self.size > size {
+                size = self.size
+            }
+        }
+        let weight = keeping.contains(.weight) ? self.weight : ( other?.weight ?? self.weight)
+        let design = keeping.contains(.design) ? self.design : ( other?.design ?? self.design)
+        return SSDocumentStyling.Font(size: size, weight: weight, design: design)
+    }
+    public func merge(with other: Self?, ignoring: FontPropertyOptions) -> SSDocumentStyling.Font {
+        var size = ignoring.contains(.size) ? ( other?.size ?? self.size) : self.size
+        if ignoring.contains(.keepLargerSize) {
+            if let other = other, other.size > self.size {
+                size = other.size
+            }
+            else if self.size > size {
+                size = self.size
+            }
+        }
+        let weight = ignoring.contains(.weight) ? ( other?.weight ?? self.weight) : self.weight
+        let design = ignoring.contains(.design) ? ( other?.design ?? self.design) : self.design
+        return SSDocumentStyling.Font(size: size, weight: weight, design: design)
+    }
+}

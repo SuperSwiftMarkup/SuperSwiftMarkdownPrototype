@@ -15,10 +15,10 @@ import UIKit
 
 
 extension SSInline {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
         switch self {
-        case .container(let x): return x.attributedString(styling: styling, environment: environment)
-        case .leaf(let x): return x.attributedString(styling: styling, environment: environment)
+        case .container(let x): return x.attributedString(environment: environment)
+        case .leaf(let x): return x.attributedString(environment: environment)
         }
     }
 }
@@ -26,31 +26,31 @@ extension SSInline {
 // MARK: - INLINE CONTAINERS -
 
 extension SSInline.Container {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
         switch self {
-        case .emphasis(let x): return x.attributedString(styling: styling, environment: environment)
-        case .imageLink(let x): return x.attributedString(styling: styling, environment: environment)
-        case .link(let x): return x.attributedString(styling: styling, environment: environment)
-        case .strikethrough(let x): return x.attributedString(styling: styling, environment: environment)
-        case .strong(let x): return x.attributedString(styling: styling, environment: environment)
+        case .emphasis(let x): return x.attributedString(environment: environment)
+        case .imageLink(let x): return x.attributedString(environment: environment)
+        case .link(let x): return x.attributedString(environment: environment)
+        case .strikethrough(let x): return x.attributedString(environment: environment)
+        case .strong(let x): return x.attributedString(environment: environment)
         }
     }
 }
 extension SSInline.EmphasisNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.emphasis
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.emphasis
         let environment = environment
             .withScope(.inline(.emphasis))
             .withEmphasis(true)
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
         let systemAttributes = environment.inlineLevelSystemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
         let token = NSAttributedString(string: "**", attributes: syntaxSystemAttributes)
         return self.children
-            .map { $0.attributedString(styling: styling, environment: environment) }
+            .map { $0.attributedString(environment: environment) }
             .join(
                 leading: nodeStyling.showSyntax ? token : nil,
                 contentStyling: systemAttributes,
@@ -59,17 +59,17 @@ extension SSInline.EmphasisNode {
     }
 }
 extension SSInline.ImageLinkNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.imageLink
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.imageLink
         let environment = environment
             .withScope(.inline(.imageLink))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
 //        let systemAttributes = environment.systemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
-//        let display = display.map { $0.attributedString(styling: styling, environment: environment) }.join(
+//        let display = display.map { $0.attributedString(environment: environment) }.join(
 //            leading: nodeStyling.showSyntax ? NSAttributedString(string: "![", attributes: syntaxSystemAttributes) : nil,
 //            contentStyling: systemAttributes,
 //            trailing: nodeStyling.showSyntax ? NSAttributedString(string: "]", attributes: syntaxSystemAttributes) : nil
@@ -83,7 +83,7 @@ extension SSInline.ImageLinkNode {
 //        )
 //        return [display, ending].join(leading: nil, contentStyling: nil, trailing: nil)
         let link = renderLink(
-            styling: styling,
+            styling: environment.documentStyling,
             environment: environment,
             showSyntax: nodeStyling.showSyntax,
             display: self.display,
@@ -97,17 +97,17 @@ extension SSInline.ImageLinkNode {
     }
 }
 extension SSInline.LinkNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.link
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.link
         let environment = environment
             .withScope(.inline(.link))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
 //        let systemAttributes = environment.systemAttributes
 //        let syntaxSystemAttributes = environment
 //            .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
 //            .withForegroundColor(styling.deemphasizedSyntaxColor)
 //            .systemAttributes
-//        let display = display.map { $0.attributedString(styling: styling, environment: environment) }.join(
+//        let display = display.map { $0.attributedString(environment: environment) }.join(
 //            leading: nodeStyling.showSyntax ? NSAttributedString(string: "[", attributes: syntaxSystemAttributes) : nil,
 //            contentStyling: systemAttributes,
 //            trailing: nodeStyling.showSyntax ? NSAttributedString(string: "]", attributes: syntaxSystemAttributes) : nil
@@ -121,7 +121,7 @@ extension SSInline.LinkNode {
 //        )
 //        return [display, ending].join(leading: nil, contentStyling: nil, trailing: nil)
         return renderLink(
-            styling: styling,
+            styling: environment.documentStyling,
             environment: environment,
             showSyntax: nodeStyling.showSyntax,
             display: self.display,
@@ -131,20 +131,20 @@ extension SSInline.LinkNode {
     }
 }
 extension SSInline.StrikethroughNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.strikethrough
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.strikethrough
         let environment = environment
             .withScope(.inline(.strikethrough))
             .withStrikethrough(true)
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
         let systemAttributes = environment.inlineLevelSystemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
         let token = NSAttributedString(string: "~~", attributes: syntaxSystemAttributes)
         return self.children.map
-        { $0.attributedString(styling: styling, environment: environment) }
+        { $0.attributedString(environment: environment) }
             .join(
                 leading: nodeStyling.showSyntax ? token : nil,
                 contentStyling: systemAttributes,
@@ -153,20 +153,20 @@ extension SSInline.StrikethroughNode {
     }
 }
 extension SSInline.StrongNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.strong
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.strong
         let environment = environment
             .withScope(.inline(.strong))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
             .withStringEmphasis(true)
         let systemAttributes = environment.inlineLevelSystemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
         let token = NSAttributedString(string: "***", attributes: syntaxSystemAttributes)
         return self.children.map
-        { $0.attributedString(styling: styling, environment: environment) }
+        { $0.attributedString(environment: environment) }
             .join(
                 leading: nodeStyling.showSyntax ? token : nil,
                 contentStyling: systemAttributes,
@@ -178,28 +178,30 @@ extension SSInline.StrongNode {
 // MARK: - INLINE LEAVES -
 
 extension SSInline.Leaf {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
         switch self {
-        case .inlineCode(let x): return x.attributedString(styling: styling, environment: environment)
-        case .inlineHTML(let x): return x.attributedString(styling: styling, environment: environment)
-        case .lineBreak(let x): return x.attributedString(styling: styling, environment: environment)
-        case .softBreak(let x): return x.attributedString(styling: styling, environment: environment)
-        case .symbolLink(let x): return x.attributedString(styling: styling, environment: environment)
-        case .text(let x): return x.attributedString(styling: styling, environment: environment)
+        case .inlineCode(let x): return x.attributedString(environment: environment)
+        case .inlineHTML(let x): return x.attributedString(environment: environment)
+        case .lineBreak(let x): return x.attributedString(environment: environment)
+        case .softBreak(let x): return x.attributedString(environment: environment)
+        case .symbolLink(let x): return x.attributedString(environment: environment)
+        case .text(let x): return x.attributedString(environment: environment)
         }
     }
 }
 extension SSInline.InlineCodeNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.inlineCode
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.inlineCode
         let environment = environment
             .withScope(.inline(.inlineCode))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
             .mapFont(default: nil, transform: { $0.withDesign(.monospaced) })
+            .withForegroundColor(nodeStyling.foregroundColor)
+            .withBackgroundColor(nodeStyling.backgroundColor)
         let systemAttributes = environment.inlineLevelSystemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
         let token = NSAttributedString(string: "`", attributes: syntaxSystemAttributes)
         let result = NSAttributedString(string: value, attributes: systemAttributes)
@@ -210,43 +212,45 @@ extension SSInline.InlineCodeNode {
     }
 }
 extension SSInline.InlineHTMLNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.inlineHTML
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.inlineHTML
         let environment = environment
             .withScope(.inline(.inlineHTML))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
             .mapFont(default: nil, transform: { $0.withDesign(.monospaced) })
+            .withForegroundColor(nodeStyling.foregroundColor)
+            .withBackgroundColor(nodeStyling.backgroundColor)
         let systemAttributes = environment.inlineLevelSystemAttributes
         return NSAttributedString(string: value, attributes: systemAttributes)
     }
 }
 extension SSInline.LineBreakNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
 //        let nodeStyling = styling.inline.lineBreak
         let environment = environment
             .withScope(.inline(.lineBreak))
         let systemAttributes = environment.inlineLevelSystemAttributes
-        return NSAttributedString(string: styling.inline.lineBreak.value, attributes: systemAttributes)
+        return NSAttributedString(string: environment.documentStyling.inline.lineBreak.value, attributes: systemAttributes)
     }
 }
 extension SSInline.SoftBreakNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
 //        let nodeStyling = styling.inline.softBreak
         let environment = environment.withScope(.inline(.softBreak))
         let systemAttributes = environment.inlineLevelSystemAttributes
-        return NSAttributedString(string: styling.inline.softBreak.value, attributes: systemAttributes)
+        return NSAttributedString(string: environment.documentStyling.inline.softBreak.value, attributes: systemAttributes)
     }
 }
 extension SSInline.SymbolLinkNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.symbolLink
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.symbolLink
         let environment = environment
             .withScope(.inline(.symbolLink))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
         let systemAttributes = environment.inlineLevelSystemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-            .withForegroundColor(styling.deemphasizedSyntaxColor)
+            .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
         let token = NSAttributedString(string: "`", attributes: syntaxSystemAttributes)
         let result = NSAttributedString(string: destination ?? "", attributes: systemAttributes)
@@ -257,11 +261,11 @@ extension SSInline.SymbolLinkNode {
     }
 }
 extension SSInline.TextNode {
-    public func attributedString(styling: SSDocumentStyling, environment: SSStyleEnvironment) -> NSAttributedString {
-        let nodeStyling = styling.inline.text
+    public func attributedString(environment: SSStyleEnvironment) -> NSAttributedString {
+        let nodeStyling = environment.documentStyling.inline.text
         let environment = environment
             .withScope(.inline(.text))
-            .withFont(ifUndefined: nodeStyling.font)
+            .mergeFont(nodeStyling.font, ignoring: .keepLargerSize)
         let systemAttributes = environment.inlineLevelSystemAttributes
         return NSMutableAttributedString(string: value, attributes: systemAttributes)
     }
@@ -283,7 +287,7 @@ fileprivate func renderLink(
         .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
         .withForegroundColor(styling.deemphasizedSyntaxColor)
         .inlineLevelSystemAttributes
-    let display = display.map { $0.attributedString(styling: styling, environment: environment) }.join(
+    let display = display.map { $0.attributedString(environment: environment) }.join(
         leading: showSyntax ? NSAttributedString(string: "[", attributes: syntaxSystemAttributes) : nil,
         contentStyling: systemAttributes,
         trailing: showSyntax ? NSAttributedString(string: "]", attributes: syntaxSystemAttributes) : nil

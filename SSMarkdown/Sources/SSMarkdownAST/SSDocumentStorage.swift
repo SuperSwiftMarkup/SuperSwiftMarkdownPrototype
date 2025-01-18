@@ -205,7 +205,7 @@ fileprivate struct ParagraphStore {
     public let paragraphs: [ ParagraphEntry ]
     public let range: NSRange
     public init(fromDocument document: SSDocument, textContentManager: NSTextContentManager) {
-        let entries = document.nodes.map { $0.attributedString(styling: .default, environment: .default) }
+        let entries = document.nodes.map { $0.attributedString(environment: .default) }
         var paragraphs: [ ParagraphEntry ] = []
         var indexOffset: Int = 0
         for entry in entries {
@@ -341,7 +341,7 @@ public final class DocumentTextStorage: NSTextStorage {
     public static func new(document: SSDocument) -> DocumentTextStorage {
         let textStorage = DocumentTextStorage()
 //        textStorage.setAttributedString(document.attributedString(styling: .default))
-        textStorage._attributedString = NSMutableAttributedString(attributedString: document.attributedString(styling: .default))
+        textStorage._attributedString = NSMutableAttributedString(attributedString: document.attributedString())
         return textStorage
     }
 //    override public func setAttributedString(_ attrString: NSAttributedString) {

@@ -14,12 +14,13 @@ import UIKit
 #endif
 
 extension SSDocument {
-    public func attributedString(styling: SSDocumentStyling) -> NSAttributedString {
+    public func attributedString() -> NSAttributedString {
         self.nodes
             .map {
 //                print("HERE: \($0)")
-                return $0.attributedString(styling: styling, environment: .default)
+                return $0.attributedString(environment: .default)
             }
-            .join(leading: nil, contentStyling: nil, trailing: nil)
+//            .join(leading: nil, contentStyling: nil, trailing: nil)
+            .join(separatedBy: NSAttributedString.doubleNewline)
     }
 }

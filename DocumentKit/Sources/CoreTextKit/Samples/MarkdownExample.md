@@ -40,8 +40,9 @@
    - Purple
    - Gray
 
-> # Block Quote
-> 
+# Block Quote
+
+> ## In Block Quote
 > > 4. Delta
 > >    - Teal
 > >    - Indigo
@@ -68,10 +69,7 @@
 
 ## Syntax
 
-s  
-
-
-
+s
 
 ```
 # h1 Heading 8-)
@@ -268,6 +266,20 @@ _This is italic text_
 - [x] list syntax required (any unordered or ordered list supported)
 - [ ] this is a complete item
 - [ ] this is an incomplete item
+
+
+* Alpha
+* Beta
+* Gamma
+* Delta
+* Epsilon
+
+
+1. Alpha
+2. Beta
+3. Gamma
+4. Delta
+5. Epsilon
 
 ------
 

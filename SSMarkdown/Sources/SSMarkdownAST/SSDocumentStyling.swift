@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SSDocumentStyling {
+public final class SSDocumentStyling {
     let block: Block
     let inline: Inline
     let deemphasizedSyntaxColor: XColor = XColor.lightGray
@@ -35,7 +35,10 @@ public struct SSDocumentStyling {
 extension SSDocumentStyling {
     public static var `default`: SSDocumentStyling {
         let showSyntax = false
-        let foregroundColor: XColor? = nil
+        let foregroundColor: XColor? = XColor.textColor
+        let codeForegroundColor: XColor? = XColor.black
+        let blockCodeBackgroundColor: XColor? = nil
+        let inlineCodeBackgroundColor: XColor? = XColor.lightGray.withAlphaComponent(0.2)
         let defaultFont = SSDocumentStyling.Font(size: 16, weight: .regular, design: .default)
         return SSDocumentStyling(
             block: .init(
@@ -79,34 +82,36 @@ extension SSDocumentStyling {
                 ),
                 hTMLBlock: .init(
                     font: .init(size: defaultFont.size, weight: .light, design: .monospaced),
-                    foregroundColor: foregroundColor,
+                    foregroundColor: codeForegroundColor,
+                    backgroundColor: blockCodeBackgroundColor,
                     showSyntax: showSyntax
                 ),
                 thematicBreak: .init(font: defaultFont, foregroundColor: foregroundColor, showSyntax: showSyntax),
                 codeBlock: .init(
                     font: Font(size: 14, weight: .regular, design: .monospaced),
                     foregroundColor: XColor.darkGray,
+                    backgroundColor: blockCodeBackgroundColor,
                     showSyntax: true
                 )
             ),
             inline: .init(
                 emphasis: .init(
-                    font: .init(size: 16, weight: .bold, design: .default),
+                    font: .init(size: 18, weight: .bold, design: .default),
                     foregroundColor: nil,
                     showSyntax: false
                 ),
                 imageLink: .init(
-                    font: .init(size: 16, weight: .bold, design: .default),
+                    font: .init(size: 16, weight: .regular, design: .default),
                     foregroundColor: nil,
                     showSyntax: false
                 ),
                 link: .init(
-                    font: .init(size: 16, weight: .bold, design: .default),
+                    font: .init(size: 16, weight: .regular, design: .default),
                     foregroundColor: nil,
                     showSyntax: false
                 ),
                 strikethrough: .init(
-                    font: .init(size: 16, weight: .bold, design: .default),
+                    font: .init(size: 16, weight: .medium, design: .default),
                     foregroundColor: nil,
                     showSyntax: false
                 ),
@@ -116,13 +121,15 @@ extension SSDocumentStyling {
                     showSyntax: false
                 ),
                 inlineCode: .init(
-                    font: .init(size: 16, weight: .regular, design: .default),
-                    foregroundColor: nil,
+                    font: .init(size: 16, weight: .light, design: .monospaced),
+                    foregroundColor: codeForegroundColor,
+                    backgroundColor: inlineCodeBackgroundColor,
                     showSyntax: false
                 ),
                 inlineHTML: .init(
-                    font: .init(size: 16, weight: .regular, design: .default),
-                    foregroundColor: nil,
+                    font: .init(size: 16, weight: .regular, design: .monospaced),
+                    foregroundColor: codeForegroundColor,
+                    backgroundColor: inlineCodeBackgroundColor,
                     showSyntax: false
                 ),
                 lineBreak: .init(
@@ -132,8 +139,9 @@ extension SSDocumentStyling {
                     value: "\n"
                 ),
                 symbolLink: .init(
-                    font: .init(size: 16, weight: .bold, design: .default),
+                    font: .init(size: 16, weight: .regular, design: .default),
                     foregroundColor: nil,
+                    backgroundColor: inlineCodeBackgroundColor,
                     showSyntax: false
                 ),
                 text: .init(
