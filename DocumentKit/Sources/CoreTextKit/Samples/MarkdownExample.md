@@ -1,44 +1,40 @@
 # Document — Lorem Ipsum Dollar Sum Import
 
-- To Sherlock Holmes she is always the woman.
-- I have seldom heard him mention her under any other name.
-- In his eyes she eclipses and predominates the whole of her sex.
-- It was not that he felt any emotion akin to love for Irene Adler.
-- All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.
-- He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position. 
+1. To Sherlock Holmes she is always the woman.
+2. I have seldom heard him mention her under any other name.
+3. In his eyes she eclipses and predominates the whole of her sex.
+4. It was not that he felt any emotion akin to love for Irene Adler.
+5. All emotions, and that one particularly, were abhorrent to his cold, precise but admirably balanced mind.
+6. He was, I take it, the most perfect reasoning and observing machine that the world has seen, but as a lover he would have placed himself in a false position. 
 
-## SubSection - Lorem Ipsum Dollar Sum Import
+- [x] Finish my changes
+- [ ] Push my commits to GitHub
+- [ ] Open a pull request
+- [x] @mentions, #refs, [links](), **formatting**, and <del>tags</del> supported
+- [x] list syntax required (any unordered or ordered list supported)
+- [ ] this is a complete item
 
-1. Alpha
-   ## SubList—Super hard to layout as plain text
-   - Red
+## SubSection — Lorem Ipsum Dollar Sum Import
+1.  Item One
+    ### SubList — Nested List Within A List — Super hard to layout as plain text
+    - The Tao doesn't take sides; it gives birth to both wins and losses.
+    - The Guru doesn't take sides; she welcomes both hackers and lusers.
+    - The Tao is like a stack: the data changes but not the structure; the more you use it, the deeper it becomes; the more you talk of it, the less you understand.
+2. Item Two — The subject for history is not man's will itself but our presentation of it.
+    - On the eighth of September an officer--a very important one judging by the respect the guards showed him--entered the coach house where the prisoners were.
+   ### Completed Work — Some Other Nested List
+    - [x] Omega Ωω
+    - [ ] Psi Ψ𝛙
+    - [ ] Chi Χχ
+    - [x] Phi Φφ
+    - [x] Upsilon Υυ
+    - [ ] Tau Ττ
+3. Item 3
+   ### SubList
+   - Teal
      The subject for history is not man's will itself but our presentation of it.
-   - Green
-   - Blue
-2. Beta
-   - Orange
-   - Yellow
-   - Brown
-3. Gamma
-   - Pink
-   - Purple
-   - Gray
-
-
-1. Alpha — On the eighth of September an officer--a very important one judging by the respect the guards showed him--entered the coach house where the prisoners were.
-   ## SubList—Super hard to layout as plain text
-   - Red
-     The subject for history is not man's will itself but our presentation of it.
-   - Green
-   - Blue
-2. Beta
-   - Orange
-   - Yellow
-   - Brown
-3. Gamma
-   - Pink
-   - Purple
-   - Gray
+   - Indigo
+   - Mint
 
 # Block Quote
 

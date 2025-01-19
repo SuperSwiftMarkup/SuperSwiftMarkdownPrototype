@@ -31,3 +31,15 @@ extension CGRect {
     typealias EdgeInsets = UIEdgeInsets
 #endif
 }
+
+extension CGRect {
+    internal func mapOrigin(apply: @escaping (CGPoint) -> CGPoint) -> CGRect {
+        CGRect(origin: apply(self.origin), size: self.size)
+    }
+    internal func mapSize(apply: @escaping (CGSize) -> CGSize) -> CGRect {
+        CGRect(origin: self.origin, size: apply(self.size))
+    }
+    internal func mapWidth(apply: @escaping (CGFloat) -> CGFloat) -> CGRect {
+        CGRect(origin: self.origin, size: .init(width: apply(self.size.width), height: self.size.height))
+    }
+}

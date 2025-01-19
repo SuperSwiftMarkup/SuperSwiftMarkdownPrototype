@@ -282,6 +282,8 @@ fileprivate func renderLink(
     var systemAttributes = environment.inlineLevelSystemAttributes
     if let destination = destination {
         systemAttributes[.link] = destination
+    } else {
+        systemAttributes[.foregroundColor] = XColor.systemTeal
     }
     let syntaxSystemAttributes = environment
         .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }

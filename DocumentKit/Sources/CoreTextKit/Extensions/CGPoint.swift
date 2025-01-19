@@ -15,6 +15,9 @@ extension CGPoint {
     @inlinable internal func subtractingX(by offset: CGFloat) -> CGPoint {
         return CGPoint(x: self.x - offset, y: self.y)
     }
+    @inlinable internal func mapX(apply: (CGFloat) -> CGFloat) -> CGPoint {
+        return CGPoint(x: apply(self.x), y: self.y)
+    }
 
     /// Adjusts the `y` coordinate by subtracting a specified offset.
     ///

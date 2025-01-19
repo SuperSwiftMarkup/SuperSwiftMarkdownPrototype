@@ -99,7 +99,7 @@ extension SSBlock.ListItemNode {
                     .withWeight( self.checkbox == nil ? .light : .light )
                     .mapSize {
                         if self.checkbox != nil {
-                            return $0 + 6
+                            return $0 + 2
                         } else {
                             return $0
                         }

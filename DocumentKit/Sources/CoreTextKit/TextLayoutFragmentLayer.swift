@@ -60,6 +60,28 @@ internal class TextLayoutFragmentLayer: CALayer {
 //        position.x += padding
 //    }
     func updateGeometry() {
+        setGeometryToFullWidth()
+//        setGeometryToRenderingSurfaceBounds()
+    }
+    func setGeometryToFullWidth() {
+        bounds = CGRect(
+            origin: CGPoint(
+                x: 0,
+                y: layoutFragment.renderingSurfaceBounds.origin.y
+            ),
+            size: CGSize(
+                width: max(layoutFragment.renderingSurfaceBounds.width, parent?.bounds.width ?? 0),
+                height: layoutFragment.renderingSurfaceBounds.height
+            )
+        )
+//        bounds = bounds.union(layoutFragment.layoutFragmentFrame.mapOrigin(apply: { _ in  .zero}))
+        anchorPoint = CGPoint(x: -bounds.origin.x / bounds.size.width, y: -bounds.origin.y / bounds.size.height)
+        position = layoutFragment.layoutFragmentFrame.origin.mapX(apply: { _ in 0 })
+        if #unavailable(iOS 17, macOS 14) {
+            bounds.origin = bounds.origin.mapX(apply: { $0 + position.x })
+        }
+    }
+    func setGeometryToRenderingSurfaceBounds() {
         if isThematicBreakNode {
             return updateGeometryHRTag()
         }
@@ -81,26 +103,14 @@ internal class TextLayoutFragmentLayer: CALayer {
         // The (0, 0) point in layer space should be the anchor point.
         anchorPoint = CGPoint(x: -bounds.origin.x / bounds.size.width, y: -bounds.origin.y / bounds.size.height)
         position = layoutFragment.layoutFragmentFrame.origin
-        var newBounds = bounds
 
         // On macOS 14 and iOS 17, NSTextLayoutFragment.renderingSurfaceBounds is properly relative to the NSTextLayoutFragment's
         // interior coordinate system, and so this sample no longer needs the inconsistent x origin adjustment.
         if #unavailable(iOS 17, macOS 14) {
-            newBounds.origin.x += position.x
+            bounds.origin = bounds.origin.mapX(apply: { $0 + position.x })
         }
-        bounds = newBounds
-//        position.x += padding
-//        // MARK: - NEW CODE -
-//        let offset: CGFloat = 0
-////        position.x += padding
-//        position.x = offset
-//        anchorPoint.x = offset
-//        bounds = CGRect(origin: .init(x: offset, y: bounds.origin.y), size: bounds.size)
-//        frame = CGRect(
-//            origin: .init(x: offset, y: frame.origin.y),
-//            size: frame.size
-//        )
     }
+    // Full width; will eventually draw an divider graphic
     func updateGeometryHRTag() {
         bounds = layoutFragment.renderingSurfaceBounds
         bounds = CGRect(
@@ -167,30 +177,36 @@ internal class TextLayoutFragmentLayer: CALayer {
             context.restoreGState()
         }
 //        layoutFragment.draw(at: .zero, in: context)
-        layoutFragment.draw(at: .init(x: self.padding, y: 0), in: context)
+        layoutFragment.draw(
+            at: .init(
+                x: layoutFragment.layoutFragmentFrame.origin.x + padding,
+                y: 0
+            ),
+            in: context
+        )
     }
     private func drawBackgroundDebug(context: CGContext) {
-//        let colors: [NSColor] = [
-//            NSColor.systemRed,
-//            NSColor.systemGreen,
-//            NSColor.systemBlue,
-//            NSColor.systemOrange,
-//            NSColor.systemYellow,
-//            NSColor.systemBrown,
-//            NSColor.systemPink,
-//            NSColor.systemPurple,
-//            NSColor.systemGray,
-//            NSColor.systemTeal,
-//            NSColor.systemIndigo,
-//            NSColor.systemMint,
-//            NSColor.systemCyan,
-//        ]
-//        context.saveGState()
-//        let color = colors.randomElement()!.withAlphaComponent(0.08)
-//        context.saveGState()
-//        context.setFillColor(color.cgColor)
-//        context.fill([ self.bounds ])
-//        context.restoreGState()
+        let colors: [NSColor] = [
+            NSColor.systemRed,
+            NSColor.systemGreen,
+            NSColor.systemBlue,
+            NSColor.systemOrange,
+            NSColor.systemYellow,
+            NSColor.systemBrown,
+            NSColor.systemPink,
+            NSColor.systemPurple,
+            NSColor.systemGray,
+            NSColor.systemTeal,
+            NSColor.systemIndigo,
+            NSColor.systemMint,
+            NSColor.systemCyan,
+        ]
+        context.saveGState()
+        let color = colors.randomElement()!.withAlphaComponent(0.08)
+        context.saveGState()
+        context.setFillColor(color.cgColor)
+        context.fill([ self.bounds ])
+        context.restoreGState()
         
         // LINE FRAGMENTS DEBUG
         context.saveGState()
@@ -204,20 +220,15 @@ internal class TextLayoutFragmentLayer: CALayer {
                 let color1 = NSColor.blue.withAlphaComponent(0.8)
                 let color2 = NSColor.systemPink.withAlphaComponent(0.8)
                 let color = index == 0 ? color1 : color2
-                let bounds = CGRect(
-                    origin: .init(
-                        x: line.typographicBounds.origin.x + padding,
-                        y: line.typographicBounds.origin.y
-                    ),
-                    size: .init(
-                        width: line.typographicBounds.size.width,
-                        height: line.typographicBounds.size.height
-                    )
+                let positionX = layoutFragment.layoutFragmentFrame.origin.x + line.typographicBounds.origin.x + padding
+                let region = CGRect(
+                    origin: .init( x: positionX, y: line.typographicBounds.origin.y ),
+                    size: line.typographicBounds.size
                 )
                 context.setStrokeColor(color.cgColor)
                 context.setLineDash(phase: 1, lengths: [ strokeWidth, strokeWidth ])
                 context.stroke(
-                    bounds.insetBy(dx: inset, dy: inset)
+                    region.insetBy(dx: inset, dy: inset)
                 )
             }
         }
@@ -232,7 +243,7 @@ internal class TextLayoutFragmentLayer: CALayer {
             context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
         }
         let circle = CGPath.init(
-            ellipseIn: CGRect(x: -3, y: (bounds.maxY*0.5) - 3, width: 6, height: 6),
+            ellipseIn: CGRect(x: 0, y: (bounds.maxY*0.5) - 3, width: 6, height: 6),
             transform: nil
         )
         context.addPath(circle)
