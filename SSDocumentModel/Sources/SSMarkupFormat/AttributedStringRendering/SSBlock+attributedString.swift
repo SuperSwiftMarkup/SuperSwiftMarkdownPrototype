@@ -9,7 +9,7 @@ import Foundation
 import SSDMUtilities
 
 extension SSBlock {
-    internal func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    internal func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         switch self {
         case .blockQuote(let node):
             node.attributedString(context: &context, environment: environment)
@@ -34,7 +34,7 @@ extension SSBlock {
 }
 
 extension SSBlock.BlockQuoteNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
             .updateStyling {
                 $0  .with(backgroundColor: .red.with(alpha: 0.25), updateType: .preferExisting)
@@ -50,12 +50,12 @@ extension SSBlock.BlockQuoteNode {
     }
 }
 extension SSBlock.OrderedListNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
 //        context.beginNewBlock(environment: environment)
         let environment = environment
-            .updateStyling {
-                $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
-            }
+//            .updateStyling {
+//                $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
+//            }
             .updateTypesetting {
                 $0  .extend(baseIndentationLevel: .quarter)
             }
@@ -71,11 +71,11 @@ extension SSBlock.OrderedListNode {
     }
 }
 extension SSBlock.UnorderedListNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
-            .updateStyling {
-                $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
-            }
+//            .updateStyling {
+//                $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
+//            }
             .updateTypesetting {
                 $0  .extend(baseIndentationLevel: .quarter)
             }
@@ -91,26 +91,38 @@ extension SSBlock.UnorderedListNode {
     }
 }
 extension SSBlock.TableNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment.updateStyling {
             $0.with(fontDesign: .monospaced)
         }
         context.append(string: "<<TABLE>>", environment: environment)
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
     }
 }
 extension SSBlock.ParagraphNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
+//            .updateTypesetting {
+//                $0  .clearTrailingIndentationLevel()
+//            }
+//            .updateTypesetting {
+//                $0  .extend(trailingIndentationLevel: .whole)
+//                    .extend(baseIndentationLevel: .half)
+//            }
+        var paragraphState = ParagraphState()
         for child in self.children {
-            child.attributedString(context: &context, environment: environment)
+            child.attributedString(context: &paragraphState, environment: environment)
         }
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
+        context.push(paragraphState: paragraphState, environment: environment, endingLineBreak: .hardLineBreak)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: false)
     }
 }
 extension SSBlock.HeadingNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = level.environment(environment: environment)
+            .updateTypesetting {
+                $0  .clearTrailingIndentationLevel()
+            }
             .updateTypesetting {
                 $0  .extend(trailingIndentationLevel: .whole)
             }
@@ -120,25 +132,27 @@ extension SSBlock.HeadingNode {
             $0  .with(foregroundColor: tokenColor)
                 .with(fontWeight: .light)
         })
+        var paragraphState = ParagraphState()
         for child in self.children {
-            child.attributedString(context: &context, environment: environment)
+            child.attributedString(context: &paragraphState, environment: environment)
         }
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
+        context.push(paragraphState: paragraphState, environment: environment, endingLineBreak: .hardLineBreak)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: false)
     }
 }
 extension SSBlock.HTMLBlockNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
                     .mapFontSize { $0 * 0.8 }
             }
         context.append(string: self.value, environment: environment)
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
     }
 }
 extension SSBlock.CodeBlockNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
@@ -148,17 +162,17 @@ extension SSBlock.CodeBlockNode {
         context.append(lineBreak: .hardLineBreak, environment: environment)
         context.append(string: value, environment: environment)
         context.append(string: "```", environment: environment)
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
     }
 }
 extension SSBlock.ThematicBreakNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
             .updateStyling {
                 $0.with(fontDesign: .monospaced)
             }
         context.append(string: "---", environment: environment)
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
     }
 }
 
@@ -166,17 +180,21 @@ extension SSBlock.ThematicBreakNode {
 
 extension SSBlock.ListItemNode {
     fileprivate func attributedString(
-        context: inout AttributedStringContext,
+        context: inout DocumentContext,
         environment: AttributeEnvironment,
         itemType: SSBlock.ListItemNode.ListItemType
     ) {
         let environment = environment
+//            .updateTypesetting {
+//                $0  .extend(baseIndentationLevel: .half)
+//            }
         for (index, child) in self.children.enumerated() {
             let isFirst = index == 0
             let isLast = index + 1 == self.children.count
             let environment = environment
                 .updateTypesetting(ifTrue: isFirst) {
-                    $0  .extend(trailingIndentationLevel: .whole)
+                    $0  .extend(trailingIndentationLevel: .half)
+//                        .extend(baseIndentationLevel: .half)
                 }
                 .updateTypesetting(ifTrue: !isFirst) {
                     $0  .extend(baseIndentationLevel: .half)
@@ -189,7 +207,7 @@ extension SSBlock.ListItemNode {
         }
     }
     fileprivate func startToken(
-        context: inout AttributedStringContext,
+        context: inout DocumentContext,
         environment: AttributeEnvironment,
         itemType: SSBlock.ListItemNode.ListItemType
     ) {

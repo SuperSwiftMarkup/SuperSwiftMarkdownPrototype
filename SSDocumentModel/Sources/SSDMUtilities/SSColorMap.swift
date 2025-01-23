@@ -70,6 +70,24 @@ extension SSColorMap {
     public static let cyan: Self = Self(light: .systemCyan, dark: .systemCyan)
     public static let clear: Self = Self(light: XColor.clear, dark: XColor.clear)
     public static let unnoticeable: Self = Self(light: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01), dark: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.01235708773))
+    public static var random: Self {
+        let colors = [
+            red,
+            green,
+            blue,
+            orange,
+            yellow,
+            brown,
+            pink,
+            purple,
+            gray,
+            teal,
+            indigo,
+            mint,
+            cyan,
+        ]
+        return colors.randomElement()!
+    }
 }
 
 //extension SSColorMap: View {

@@ -8,8 +8,10 @@
 import Foundation
 import SSDMUtilities
 
+fileprivate let FORCE_REPLACE_LINE_BREAKS_WITH_SPACE: Bool = false
+
 extension SSInline {
-    internal func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    internal func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         switch self {
         case .emphasis(let node):
             node.attributedString(context: &context, environment: environment)
@@ -38,7 +40,7 @@ extension SSInline {
 }
 
 extension SSInline.EmphasisNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         let environment = environment.updateStyling { $0.with(italicTextStyle: true) }
         let token = "*"
         context.append(string: token, environment: environment)
@@ -49,28 +51,35 @@ extension SSInline.EmphasisNode {
     }
 }
 extension SSInline.ImageLinkNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         context.append(string: "!", environment: environment)
         renderLink(context: &context, environment: environment, children: display, destination: source, title: title)
     }
 }
 extension SSInline.LinkNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         renderLink(context: &context, environment: environment, children: display, destination: destination, title: title)
     }
 }
 extension SSInline.StrikethroughNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        let environment = environment.updateStyling { $0.with(strikethroughMode: true) }
-        context.append(string: "~~", environment: environment)
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
+        let tokenEnvironment = environment
+            .updateStyling {
+                $0  .with(fontWeight: .light)
+            }
+        let environment = environment
+            .updateStyling {
+                $0.with(strikethroughMode: true)
+            }
+        context.append(string: "~~", environment: tokenEnvironment)
         for child in self.children {
             child.attributedString(context: &context, environment: environment)
         }
-        context.append(string: "~~", environment: environment)
+        context.append(string: "~~", environment: tokenEnvironment)
     }
 }
 extension SSInline.StrongNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         let environment = environment.updateStyling { $0.with(boldTextStyle: true) }
         let token = "**"
         context.append(string: token, environment: environment)
@@ -81,7 +90,7 @@ extension SSInline.StrongNode {
     }
 }
 extension SSInline.InlineCodeNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         let environment = environment.updateStyling { $0.with(fontDesign: .monospaced) }
         context.append(string: "`", environment: environment)
         context.append(string: value, environment: environment)
@@ -89,36 +98,42 @@ extension SSInline.InlineCodeNode {
     }
 }
 extension SSInline.InlineHTMLNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         renderCodeVoice(context: &context, environment: environment, value: value)
     }
 }
 extension SSInline.LineBreakNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-//        context.append(lineBreak: .hardLineBreak, environment: environment)
-        context.append(string: " ", environment: environment)
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
+        if FORCE_REPLACE_LINE_BREAKS_WITH_SPACE {
+            context.append(string: " ", environment: environment)
+        } else {
+            context.append(lineBreak: .hardLineBreak, environment: environment)
+        }
     }
 }
 extension SSInline.SoftBreakNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-//        context.append(lineBreak: .softLineBreak, environment: environment)
-        context.append(string: " ", environment: environment)
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
+        if FORCE_REPLACE_LINE_BREAKS_WITH_SPACE {
+            context.append(string: " ", environment: environment)
+        } else {
+            context.append(lineBreak: .softLineBreak, environment: environment)
+        }
     }
 }
 extension SSInline.SymbolLinkNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         renderCodeVoice(context: &context, environment: environment, value: self.destination ?? "")
     }
 }
 extension SSInline.TextNode {
-    fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
+    fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
         context.append(string: value, environment: environment)
     }
 }
 
 // MARK: - INTERNAL HELPERS -
 fileprivate func renderLink(
-    context: inout AttributedStringContext,
+    context: inout ParagraphState,
     environment: AttributeEnvironment,
     children: [ SSInline ]?,
     destination: String?,
@@ -159,7 +174,7 @@ fileprivate func renderLink(
 }
 
 fileprivate func renderCodeVoice(
-    context: inout AttributedStringContext,
+    context: inout ParagraphState,
     environment: AttributeEnvironment,
     value: String
 ) {

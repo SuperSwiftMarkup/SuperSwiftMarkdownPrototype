@@ -13,4 +13,9 @@ extension Array {
         copy.append(newElement)
         return copy
     }
+    public func with<S: Sequence>(extend sequence: S) -> Self where S.Element == Element {
+        var copy = self
+        copy.append(contentsOf: sequence)
+        return copy
+    }
 }

@@ -124,6 +124,30 @@ extension AttributeEnvironment.TypesetEnvironment {
         copy.trailingIndentationLevels.append(trailingIndentationLevel)
         return copy
     }
+    internal func clearTrailingIndentationLevel() -> Self {
+        var copy = self
+        copy.trailingIndentationLevels.removeAll(keepingCapacity: true)
+        return copy
+    }
+    internal func modifyLineIndentSettings(apply: @escaping (LineIndentSetting) -> LineIndentSetting) -> Self {
+        var copy = self
+        let currentLineIndentSetting = LineIndentSetting(
+            baseIndentationLevels: baseIndentationLevels,
+            trailingIndentationLevels: trailingIndentationLevels
+        )
+        let newLineIndentSetting = apply(currentLineIndentSetting)
+        copy.baseIndentationLevels = newLineIndentSetting.baseIndentationLevels
+        copy.trailingIndentationLevels  = newLineIndentSetting.trailingIndentationLevels
+        return copy
+    }
+    internal struct LineIndentSetting {
+        internal let baseIndentationLevels: [UnitRatio]
+        internal let trailingIndentationLevels: [UnitRatio]
+        public init(baseIndentationLevels: [UnitRatio], trailingIndentationLevels: [UnitRatio]) {
+            self.baseIndentationLevels = baseIndentationLevels
+            self.trailingIndentationLevels = trailingIndentationLevels
+        }
+    }
 }
 
 extension AttributeEnvironment {
@@ -132,6 +156,13 @@ extension AttributeEnvironment {
     }
     internal func updateTypesetting(_ function: @escaping (TypesetEnvironment) -> TypesetEnvironment) -> AttributeEnvironment {
         .init(styleEnvironment: styleEnvironment, typesetEnvironment: function(typesetEnvironment))
+    }
+    internal func updateStyling(ifTrue flag: Bool, apply: @escaping (StyleEnvironment) -> StyleEnvironment) -> AttributeEnvironment {
+        if flag {
+            return .init(styleEnvironment: apply(styleEnvironment), typesetEnvironment: typesetEnvironment)
+        } else {
+            return self
+        }
     }
     internal func updateTypesetting(ifTrue flag: Bool, apply: @escaping (TypesetEnvironment) -> TypesetEnvironment) -> AttributeEnvironment {
         if flag {
@@ -160,7 +191,7 @@ extension AttributeEnvironment.StyleEnvironment {
             attributes[.backgroundColor] = color
         }
         if let strikethroughMode = strikethroughMode, strikethroughMode == true {
-            attributes[.strikethroughColor] = XColor.red
+            attributes[.strikethroughColor] = XColor.textColor
             attributes[.strikethroughStyle] = XUnderlineStyle.single.rawValue
         }
         return attributes

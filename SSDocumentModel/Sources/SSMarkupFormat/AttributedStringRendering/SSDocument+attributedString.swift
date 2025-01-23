@@ -9,7 +9,7 @@ import Foundation
 
 extension SSDocument {
     public func compileAttributedString() -> NSAttributedString {
-        var context = AttributedStringContext()
+        var context = DocumentContext()
         let environment = AttributeEnvironment.default
         for (index, block) in self.blocks.enumerated() {
             let isLast = self.blocks.count == index + 1

@@ -8,14 +8,14 @@
 import Foundation
 import SSDMUtilities
 
-internal struct AttributedStringContext: ~Copyable {
+internal struct DocumentContext: ~Copyable {
     private let buffer: NSMutableAttributedString = NSMutableAttributedString()
     private var currentBlock: NSMutableAttributedString = NSMutableAttributedString()
 //    private var currentBlockIndex: [Int] = []
 //    private var currentTypesettingEnvironment: AttributeEnvironment.TypesetEnvironment?
 }
 
-extension AttributedStringContext {
+extension DocumentContext {
     internal mutating func append(string: String, environment: AttributeEnvironment) {
         let attributes = environment.systemAttributeDictionary(forEnvironment: .styling)
         let segment = NSAttributedString(string: string, attributes: attributes)
@@ -31,24 +31,32 @@ extension AttributedStringContext {
             append(string: "\n\n", environment: environment)
         }
     }
+    internal mutating func push(
+        paragraphState: consuming ParagraphState,
+        environment: AttributeEnvironment,
+        endingLineBreak: LineBreakType?
+    ) {
+        currentBlock = paragraphState.finalize(environment: environment, preceeding: currentBlock)
+    }
     private mutating func applyTypesettingEnvironment(environment: AttributeEnvironment) {
-        let startIndex = currentBlock.string
-            .firstIndex { !$0.isWhitespace }
-            .map {
-                currentBlock.string.distance(from: currentBlock.string.startIndex, to: $0)
-//                $0.utf16Offset(in: currentBlock.string)
-            }
-        let range = NSRange(location: startIndex ?? 0, length: currentBlock.length - (startIndex ?? 0))
+        let range = currentBlock.range(options: .ignoreWhitespaceAtBothEnds)
         let attributes = environment.systemAttributeDictionary(forEnvironment: .typesetting)
         currentBlock.addAttributes(attributes, range: range)
     }
-    internal mutating func endBlock(lineBreak: LineBreakType, environment: AttributeEnvironment) {
-        applyTypesettingEnvironment(environment: environment)
-        append(lineBreak: lineBreak, environment: environment)
-        buffer.append(currentBlock)
+    internal mutating func endBlock(lineBreak: LineBreakType?, environment: AttributeEnvironment, typesetBlock: Bool) {
+        if let lineBreak = lineBreak {
+            append(lineBreak: lineBreak, environment: environment)
+        }
+        if typesetBlock {
+            applyTypesettingEnvironment(environment: environment)
+        }
+        if !currentBlock.string.isEmpty {
+            buffer.append(currentBlock)
+        }
         currentBlock = NSMutableAttributedString()
     }
     internal consuming func finalize(environment: AttributeEnvironment) -> NSAttributedString {
+        applyTypesettingEnvironment(environment: environment)
         buffer.append(currentBlock)
         return buffer
     }

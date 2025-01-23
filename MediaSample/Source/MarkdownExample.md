@@ -30,11 +30,14 @@
     - [x] Upsilon Υυ
     - [ ] Tau Ττ
 3. Item 3
+   The subject for history is not man's will itself but our presentation of it.
    ### SubList
    - Teal
      The subject for history is not man's will itself but our presentation of it.
    - Indigo
+     For the ancients these questions were solved by a belief in the direct participation of the Deity in human affairs.
    - Mint
+   - #### Some Item - Lorem Ipsum — Lorem Ipsum Dollar Sum Import
 
 # Block Quote
 
