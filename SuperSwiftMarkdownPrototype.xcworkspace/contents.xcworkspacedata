@@ -11,19 +11,7 @@
       location = "group:SSDocumentModel">
    </FileRef>
    <FileRef
-      location = "group:SSMarkupString">
-   </FileRef>
-   <FileRef
-      location = "group:DocumentKit">
-   </FileRef>
-   <FileRef
-      location = "group:SSMarkdown">
-   </FileRef>
-   <FileRef
       location = "group:MediaSample">
-   </FileRef>
-   <FileRef
-      location = "group:SampleAlpha/SampleAlpha.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:README.md">

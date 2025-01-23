@@ -15,7 +15,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/swiftlang/swift-markdown.git", branch: "main"),
-//        .package(url: "https://github.com/colbyn/SwiftPrettyTree.git", .upToNextMajor(from: "0.6.3")),
         .package(url: "https://github.com/colbyn/SwiftPrettyTree.git", exact: "0.6.5"),
     ],
     targets: [
