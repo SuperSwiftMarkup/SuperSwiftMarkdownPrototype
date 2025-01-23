@@ -35,7 +35,6 @@ extension SSBlock {
 
 extension SSBlock.BlockQuoteNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
             .updateStyling {
                 $0  .with(backgroundColor: .red.with(alpha: 0.25), updateType: .preferExisting)
@@ -43,20 +42,16 @@ extension SSBlock.BlockQuoteNode {
             .updateTypesetting {
                 $0  .extend(baseIndentationLevel: .quarter)
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         for (index, child) in self.children.enumerated() {
             let isLast = self.children.count == index + 1
             child.attributedString(context: &context, environment: environment)
-            if !isLast {
-                context.append(lineBreak: .hardLineBreak, environment: environment)
-            }
+            let _ = isLast
         }
-        context.endCurrentBlock(environment: environment)
     }
 }
 extension SSBlock.OrderedListNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
+//        context.beginNewBlock(environment: environment)
         let environment = environment
             .updateStyling {
                 $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
@@ -64,7 +59,6 @@ extension SSBlock.OrderedListNode {
             .updateTypesetting {
                 $0  .extend(baseIndentationLevel: .quarter)
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         for (index, item) in self.items.enumerated() {
             let isLast = self.items.count == index + 1
             item.attributedString(
@@ -72,16 +66,12 @@ extension SSBlock.OrderedListNode {
                 environment: environment,
                 itemType: .ordered(count: index + 1)
             )
-            if !isLast {
-                context.append(lineBreak: .hardLineBreak, environment: environment)
-            }
+            let _ = isLast
         }
-        context.endCurrentBlock(environment: environment)
     }
 }
 extension SSBlock.UnorderedListNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
             .updateStyling {
                 $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
@@ -89,7 +79,6 @@ extension SSBlock.UnorderedListNode {
             .updateTypesetting {
                 $0  .extend(baseIndentationLevel: .quarter)
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         for (index, item) in self.items.enumerated() {
             let isLast = self.items.count == index + 1
             item.attributedString(
@@ -97,54 +86,34 @@ extension SSBlock.UnorderedListNode {
                 environment: environment,
                 itemType: .unordered
             )
-            if !isLast {
-                context.append(lineBreak: .hardLineBreak, environment: environment)
-            }
+            let _ = isLast
         }
     }
 }
 extension SSBlock.TableNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
-//        environment.setCurrentTypesettingEnvironment(for: &context)
         let environment = environment.updateStyling {
             $0.with(fontDesign: .monospaced)
         }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         context.append(string: "<<TABLE>>", environment: environment)
-        context.endCurrentBlock(environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
     }
 }
 extension SSBlock.ParagraphNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
-//            .updateStyling {
-//                $0  .with(backgroundColor: .red)
-//            }
-//            .updateTypesetting {
-//                $0  .extend(trailingIndentationLevel: .whole)
-//                    .extend(baseIndentationLevel: .whole)
-//            }
-//        environment.setCurrentTypesettingEnvironment(for: &context)
-        environment.setCurrentTypesettingEnvironment(context: &context)
         for child in self.children {
             child.attributedString(context: &context, environment: environment)
         }
-        context.endCurrentBlock(environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
     }
 }
 extension SSBlock.HeadingNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = level.environment(environment: environment)
-//            .updateStyling {
-//                $0  .with(backgroundColor: .red)
-//            }
             .updateTypesetting {
                 $0  .extend(trailingIndentationLevel: .whole)
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         let token = String(repeating: "#", count: Int(self.level.asUInt8))
         let tokenColor = SSColorMap(light: #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
         context.append(string: "\(token) ", environment: environment.updateStyling {
@@ -154,49 +123,42 @@ extension SSBlock.HeadingNode {
         for child in self.children {
             child.attributedString(context: &context, environment: environment)
         }
-        context.endCurrentBlock(environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
     }
 }
 extension SSBlock.HTMLBlockNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
                     .mapFontSize { $0 * 0.8 }
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         context.append(string: self.value, environment: environment)
-        context.endCurrentBlock(environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
     }
 }
 extension SSBlock.CodeBlockNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
                     .mapFontSize { $0 * 0.8 }
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
         context.append(string: "```", environment: environment)
         context.append(lineBreak: .hardLineBreak, environment: environment)
         context.append(string: value, environment: environment)
         context.append(string: "```", environment: environment)
-        context.endCurrentBlock(environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
     }
 }
 extension SSBlock.ThematicBreakNode {
     fileprivate func attributedString(context: inout AttributedStringContext, environment: AttributeEnvironment) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
             .updateStyling {
                 $0.with(fontDesign: .monospaced)
             }
-        environment.setCurrentTypesettingEnvironment(context: &context)
-//        environment.setCurrentTypesettingEnvironment(for: &context)
         context.append(string: "---", environment: environment)
-        context.endCurrentBlock(environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment)
     }
 }
 
@@ -208,16 +170,7 @@ extension SSBlock.ListItemNode {
         environment: AttributeEnvironment,
         itemType: SSBlock.ListItemNode.ListItemType
     ) {
-        context.beginNewBlock(environment: environment)
         let environment = environment
-//            .updateStyling {
-//                $0  .with(backgroundColor: .red)
-//            }
-//            .updateTypesetting {
-//                $0  .extend(baseIndentationLevel: .whole)
-//                    .extend(trailingIndentationLevel: .whole)
-//            }
-//        environment.setCurrentTypesettingEnvironment(for: &context)
         for (index, child) in self.children.enumerated() {
             let isFirst = index == 0
             let isLast = index + 1 == self.children.count
@@ -232,11 +185,8 @@ extension SSBlock.ListItemNode {
                 startToken(context: &context, environment: environment, itemType: itemType)
             }
             child.attributedString(context: &context, environment: environment)
-            if !isLast {
-                context.append(lineBreak: .hardLineBreak, environment: environment)
-            }
+            let _ = isLast
         }
-        context.endCurrentBlock(environment: environment)
     }
     fileprivate func startToken(
         context: inout AttributedStringContext,

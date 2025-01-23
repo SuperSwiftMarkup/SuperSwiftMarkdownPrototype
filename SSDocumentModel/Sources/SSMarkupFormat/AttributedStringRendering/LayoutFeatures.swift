@@ -1,6 +1,6 @@
 //
 //  LayoutFeatures.swift
-//  
+//
 //
 //  Created by Colbyn Wadman on 1/23/25.
 //
@@ -11,6 +11,9 @@ public final class LayoutFeatures {}
 
 extension LayoutFeatures {
     public struct LayoutBlock {
-        
+        private var baseIndentationLevels: [UnitRatio] = []
+        private var trailingIndentationLevels: [UnitRatio] = []
     }
 }
+
+

@@ -11,8 +11,8 @@ import SSDMUtilities
 internal struct AttributedStringContext: ~Copyable {
     private let buffer: NSMutableAttributedString = NSMutableAttributedString()
     private var currentBlock: NSMutableAttributedString = NSMutableAttributedString()
-    private var currentBlockIndex: [Int] = []
-    private var currentTypesettingEnvironment: AttributeEnvironment.TypesetEnvironment?
+//    private var currentBlockIndex: [Int] = []
+//    private var currentTypesettingEnvironment: AttributeEnvironment.TypesetEnvironment?
 }
 
 extension AttributedStringContext {
@@ -32,47 +32,24 @@ extension AttributedStringContext {
         }
     }
     private mutating func applyTypesettingEnvironment(environment: AttributeEnvironment) {
-//        if let currentTypesettingEnvironment = currentTypesettingEnvironment {
-//            currentBlock.addAttributes(currentTypesettingEnvironment.systemAttributeDictionary, range: currentBlock.range)
-//            return
-//        }
-        let attributes = currentTypesettingEnvironment?.systemAttributeDictionary
-            ?? environment.systemAttributeDictionary(forEnvironment: .typesetting)
-        let range: NSRange
-        if let currentBlockIndex = currentBlockIndex.last {
-            range = NSRange.init(
-                location: currentBlockIndex,
-                length: currentBlock.length - currentBlockIndex
-            )
-        } else {
-            range = currentBlock.range
-        }
+        let startIndex = currentBlock.string
+            .firstIndex { !$0.isWhitespace }
+            .map {
+                currentBlock.string.distance(from: currentBlock.string.startIndex, to: $0)
+//                $0.utf16Offset(in: currentBlock.string)
+            }
+        let range = NSRange(location: startIndex ?? 0, length: currentBlock.length - (startIndex ?? 0))
+        let attributes = environment.systemAttributeDictionary(forEnvironment: .typesetting)
         currentBlock.addAttributes(attributes, range: range)
-//        currentBlock.addAttributes(attributes, range: currentBlock.range)
+    }
+    internal mutating func endBlock(lineBreak: LineBreakType, environment: AttributeEnvironment) {
+        applyTypesettingEnvironment(environment: environment)
+        append(lineBreak: lineBreak, environment: environment)
+        buffer.append(currentBlock)
+        currentBlock = NSMutableAttributedString()
     }
     internal consuming func finalize(environment: AttributeEnvironment) -> NSAttributedString {
         buffer.append(currentBlock)
         return buffer
-    }
-    internal mutating func beginNewBlock(environment: AttributeEnvironment) {
-        currentBlockIndex.append(currentBlock.length)
-//        environment.setCurrentTypesettingEnvironment(context: &self)
-    }
-    internal mutating func endCurrentBlock(environment: AttributeEnvironment) {
-        if !self.currentBlock.string.isEmpty {
-            applyTypesettingEnvironment(environment: environment)
-            buffer.append(currentBlock)
-            currentBlock = NSMutableAttributedString()
-        }
-        let _ = currentBlockIndex.removeLast()
-//        environment.setCurrentTypesettingEnvironment(context: &self)
-    }
-    internal mutating func setCurrentTypesettingEnvironment(
-        _ currentTypesettingEnvironment: AttributeEnvironment.TypesetEnvironment
-    ) {
-        self.currentTypesettingEnvironment = currentTypesettingEnvironment
-    }
-    internal mutating func clearCurrentTypesettingEnvironment() {
-        self.currentTypesettingEnvironment = nil
     }
 }

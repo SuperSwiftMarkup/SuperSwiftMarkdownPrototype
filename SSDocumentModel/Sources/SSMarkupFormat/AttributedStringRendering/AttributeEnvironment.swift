@@ -140,9 +140,9 @@ extension AttributeEnvironment {
             return self
         }
     }
-    internal func setCurrentTypesettingEnvironment(context: inout AttributedStringContext) {
-        context.setCurrentTypesettingEnvironment(self.typesetEnvironment)
-    }
+//    internal func setCurrentTypesettingEnvironment(context: inout AttributedStringContext) {
+//        context.setCurrentTypesettingEnvironment(self.typesetEnvironment)
+//    }
 }
 
 // MARK: - TO SYSTEM ATTRIBUTE DICTIONARY -

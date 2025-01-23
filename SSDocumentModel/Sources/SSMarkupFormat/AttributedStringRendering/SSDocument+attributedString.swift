@@ -15,11 +15,12 @@ extension SSDocument {
             let isLast = self.blocks.count == index + 1
             block.attributedString(context: &context, environment: environment)
             context.append(lineBreak: .hardLineBreak, environment: environment)
-            context.clearCurrentTypesettingEnvironment()
-            if !isLast {
-//                context.append(lineBreak: .paragraphBreak, environment: environment)
-                context.append(lineBreak: .hardLineBreak, environment: environment)
-            }
+//            context.append(lineBreak: .hardLineBreak, environment: environment)
+//            if !isLast {
+////                context.append(lineBreak: .paragraphBreak, environment: environment)
+//                context.append(lineBreak: .hardLineBreak, environment: environment)
+//            }
+            let _ = isLast
         }
         return context.finalize(environment: environment)
     }
