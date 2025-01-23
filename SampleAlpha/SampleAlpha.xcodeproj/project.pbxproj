@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F41EC9F22D40458300E31A01 /* CoreTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = F41EC9F12D40458300E31A01 /* CoreTextKit */; };
+		F41EC9F42D40458300E31A01 /* DocumentBehavior in Frameworks */ = {isa = PBXBuildFile; productRef = F41EC9F32D40458300E31A01 /* DocumentBehavior */; };
 		F47B08BF2D374A5100931A43 /* SampleAlphaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47B08BE2D374A5100931A43 /* SampleAlphaApp.swift */; };
 		F47B08C32D374A5200931A43 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F47B08C22D374A5200931A43 /* Assets.xcassets */; };
 		F47B08C72D374A5200931A43 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F47B08C62D374A5200931A43 /* Preview Assets.xcassets */; };
-		F47B08D02D374AB800931A43 /* CoreTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = F47B08CF2D374AB800931A43 /* CoreTextKit */; };
-		F47B08D22D374AB800931A43 /* DocumentBehavior in Frameworks */ = {isa = PBXBuildFile; productRef = F47B08D12D374AB800931A43 /* DocumentBehavior */; };
-		F47B08D42D374AB800931A43 /* DocumentKit in Frameworks */ = {isa = PBXBuildFile; productRef = F47B08D32D374AB800931A43 /* DocumentKit */; };
-		F47B08D62D374AB800931A43 /* HLTextKit in Frameworks */ = {isa = PBXBuildFile; productRef = F47B08D52D374AB800931A43 /* HLTextKit */; };
+		F4B897A42D40468600B084B3 /* SSMarkdown in Frameworks */ = {isa = PBXBuildFile; productRef = F4B897A32D40468600B084B3 /* SSMarkdown */; };
+		F4B897A62D40468600B084B3 /* SSMarkdownAST in Frameworks */ = {isa = PBXBuildFile; productRef = F4B897A52D40468600B084B3 /* SSMarkdownAST */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,10 +30,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F47B08D42D374AB800931A43 /* DocumentKit in Frameworks */,
-				F47B08D02D374AB800931A43 /* CoreTextKit in Frameworks */,
-				F47B08D62D374AB800931A43 /* HLTextKit in Frameworks */,
-				F47B08D22D374AB800931A43 /* DocumentBehavior in Frameworks */,
+				F4B897A42D40468600B084B3 /* SSMarkdown in Frameworks */,
+				F41EC9F22D40458300E31A01 /* CoreTextKit in Frameworks */,
+				F4B897A62D40468600B084B3 /* SSMarkdownAST in Frameworks */,
+				F41EC9F42D40458300E31A01 /* DocumentBehavior in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,6 +46,7 @@
 				F47B08CD2D374A5700931A43 /* Source */,
 				F47B08BD2D374A5100931A43 /* SampleAlpha */,
 				F47B08BC2D374A5100931A43 /* Products */,
+				F4B897A22D40468600B084B3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -84,6 +85,13 @@
 			path = Source;
 			sourceTree = "<group>";
 		};
+		F4B897A22D40468600B084B3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -101,10 +109,10 @@
 			);
 			name = SampleAlpha;
 			packageProductDependencies = (
-				F47B08CF2D374AB800931A43 /* CoreTextKit */,
-				F47B08D12D374AB800931A43 /* DocumentBehavior */,
-				F47B08D32D374AB800931A43 /* DocumentKit */,
-				F47B08D52D374AB800931A43 /* HLTextKit */,
+				F41EC9F12D40458300E31A01 /* CoreTextKit */,
+				F41EC9F32D40458300E31A01 /* DocumentBehavior */,
+				F4B897A32D40468600B084B3 /* SSMarkdown */,
+				F4B897A52D40468600B084B3 /* SSMarkdownAST */,
 			);
 			productName = SampleAlpha;
 			productReference = F47B08BB2D374A5100931A43 /* SampleAlpha.app */;
@@ -135,7 +143,7 @@
 			);
 			mainGroup = F47B08B22D374A5100931A43;
 			packageReferences = (
-				F47B08CE2D374AB700931A43 /* XCLocalSwiftPackageReference "../DocumentKit" */,
+				F41EC9EE2D4044FF00E31A01 /* XCLocalSwiftPackageReference "../DocumentKit" */,
 			);
 			productRefGroup = F47B08BC2D374A5100931A43 /* Products */;
 			projectDirPath = "";
@@ -390,28 +398,28 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		F47B08CE2D374AB700931A43 /* XCLocalSwiftPackageReference "../DocumentKit" */ = {
+		F41EC9EE2D4044FF00E31A01 /* XCLocalSwiftPackageReference "../DocumentKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../DocumentKit;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F47B08CF2D374AB800931A43 /* CoreTextKit */ = {
+		F41EC9F12D40458300E31A01 /* CoreTextKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = CoreTextKit;
 		};
-		F47B08D12D374AB800931A43 /* DocumentBehavior */ = {
+		F41EC9F32D40458300E31A01 /* DocumentBehavior */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DocumentBehavior;
 		};
-		F47B08D32D374AB800931A43 /* DocumentKit */ = {
+		F4B897A32D40468600B084B3 /* SSMarkdown */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = DocumentKit;
+			productName = SSMarkdown;
 		};
-		F47B08D52D374AB800931A43 /* HLTextKit */ = {
+		F4B897A52D40468600B084B3 /* SSMarkdownAST */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = HLTextKit;
+			productName = SSMarkdownAST;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

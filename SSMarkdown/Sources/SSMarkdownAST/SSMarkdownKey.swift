@@ -25,5 +25,6 @@ public struct SSMarkdownKey {
         case thematicBreak = "ThematicBreak"
         case codeBlock = "CodeBlock"
     }
+    public struct BlockStructure {}
 }
 

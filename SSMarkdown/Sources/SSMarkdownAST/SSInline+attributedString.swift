@@ -64,26 +64,11 @@ extension SSInline.ImageLinkNode {
         let environment = environment
             .withScope(.inline(.imageLink))
             .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
-//        let systemAttributes = environment.systemAttributes
         let syntaxSystemAttributes = environment
             .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
             .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
             .inlineLevelSystemAttributes
-//        let display = display.map { $0.attributedString(environment: environment) }.join(
-//            leading: nodeStyling.showSyntax ? NSAttributedString(string: "![", attributes: syntaxSystemAttributes) : nil,
-//            contentStyling: systemAttributes,
-//            trailing: nodeStyling.showSyntax ? NSAttributedString(string: "]", attributes: syntaxSystemAttributes) : nil
-//        )
-//        let destination = source.map { NSAttributedString(string: $0) }
-//        let title = title.map { NSAttributedString(string: $0) }
-//        let ending = [ destination, title ].compactMap { $0 }.join(
-//            leading: nodeStyling.showSyntax ? NSAttributedString(string: "(", attributes: syntaxSystemAttributes) : nil,
-//            contentStyling: systemAttributes,
-//            trailing: nodeStyling.showSyntax ? NSAttributedString(string: ")", attributes: syntaxSystemAttributes) : nil
-//        )
-//        return [display, ending].join(leading: nil, contentStyling: nil, trailing: nil)
         let link = renderLink(
-            styling: environment.documentStyling,
             environment: environment,
             showSyntax: nodeStyling.showSyntax,
             display: self.display,
@@ -102,26 +87,7 @@ extension SSInline.LinkNode {
         let environment = environment
             .withScope(.inline(.link))
             .mergeFont(nodeStyling.font, keeping: .keepLargerSize)
-//        let systemAttributes = environment.systemAttributes
-//        let syntaxSystemAttributes = environment
-//            .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-//            .withForegroundColor(styling.deemphasizedSyntaxColor)
-//            .systemAttributes
-//        let display = display.map { $0.attributedString(environment: environment) }.join(
-//            leading: nodeStyling.showSyntax ? NSAttributedString(string: "[", attributes: syntaxSystemAttributes) : nil,
-//            contentStyling: systemAttributes,
-//            trailing: nodeStyling.showSyntax ? NSAttributedString(string: "]", attributes: syntaxSystemAttributes) : nil
-//        )
-//        let destination = destination.map { NSAttributedString(string: $0) }
-//        let title = title.map { NSAttributedString(string: $0) }
-//        let ending = [ destination, title ].compactMap { $0 }.join(
-//            leading: nodeStyling.showSyntax ? NSAttributedString(string: "(", attributes: syntaxSystemAttributes) : nil,
-//            contentStyling: systemAttributes,
-//            trailing: nodeStyling.showSyntax ? NSAttributedString(string: ")", attributes: syntaxSystemAttributes) : nil
-//        )
-//        return [display, ending].join(leading: nil, contentStyling: nil, trailing: nil)
         return renderLink(
-            styling: environment.documentStyling,
             environment: environment,
             showSyntax: nodeStyling.showSyntax,
             display: self.display,
@@ -272,7 +238,6 @@ extension SSInline.TextNode {
 }
 
 fileprivate func renderLink(
-    styling: SSDocumentStyling,
     environment: SSStyleEnvironment,
     showSyntax: Bool,
     display: [ SSInline ],
@@ -287,7 +252,7 @@ fileprivate func renderLink(
     }
     let syntaxSystemAttributes = environment
         .mapFont(default: nil) { $0.withDesign(.rounded).withWeight(.light) }
-        .withForegroundColor(styling.deemphasizedSyntaxColor)
+        .withForegroundColor(environment.documentStyling.deemphasizedSyntaxColor)
         .inlineLevelSystemAttributes
     let display = display.map { $0.attributedString(environment: environment) }.join(
         leading: showSyntax ? NSAttributedString(string: "[", attributes: syntaxSystemAttributes) : nil,
@@ -305,4 +270,10 @@ fileprivate func renderLink(
         trailing: showSyntax ? NSAttributedString(string: ")", attributes: syntaxSystemAttributes) : nil
     )
     return [display, ending].join(leading: nil, contentStyling: nil, trailing: nil)
+}
+
+internal extension SSInline {
+    static func processAttributedStringSequence() {
+        
+    }
 }

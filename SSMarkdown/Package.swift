@@ -26,17 +26,12 @@ let package = Package(
             .product(name: "Markdown", package: "swift-markdown"),
             "SwiftPrettyTree"
         ]),
-        .target(name: "SSMarkdownStorage", dependencies: [
-            "SSMarkdownAST",
-        ]),
         .target(name: "SSMarkdown", dependencies: [
             "SSMarkdownAST",
-            "SSMarkdownStorage",
         ]),
         .testTarget(name: "SSMarkdownTests", dependencies: ["SSMarkdown"]),
-        .executableTarget(name: "Development", dependencies: [
+        .executableTarget(name: "SSMarkdownDev", dependencies: [
             "SSMarkdownAST",
-            "SSMarkdownStorage",
             "SSMarkdown",
             "SwiftPrettyTree"
         ]),
