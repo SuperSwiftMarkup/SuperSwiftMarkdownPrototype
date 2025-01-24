@@ -33,23 +33,33 @@ extension DocumentContext {
     }
     internal mutating func push(
         paragraphState: consuming ParagraphState,
-        environment: AttributeEnvironment,
-        endingLineBreak: LineBreakType?
+        environment: AttributeEnvironment
     ) {
-        currentBlock = paragraphState.finalize(environment: environment, preceeding: currentBlock)
+        currentBlock = paragraphState.finalize(environment: environment, initial: currentBlock)
     }
-    private mutating func applyTypesettingEnvironment(environment: AttributeEnvironment) {
+    private mutating func applyTypesettingEnvironment(
+        environment: AttributeEnvironment,
+        typesetRange: NSAttributedString.RangeOptions
+    ) {
         let attributes = environment.systemAttributeDictionary(forEnvironment: .typesetting)
-        currentBlock.range(options: .ignoreWhitespaceAtBothEnds).map {
+        currentBlock.range(options: typesetRange).map {
             currentBlock.addAttributes(attributes, range: $0)
         }
     }
-    internal mutating func endBlock(lineBreak: LineBreakType?, environment: AttributeEnvironment, typesetBlock: Bool) {
+    internal mutating func endBlock(
+        lineBreak: LineBreakType?,
+        environment: AttributeEnvironment,
+        typesetBlock: Bool,
+        typesetRange: NSAttributedString.RangeOptions? = nil
+    ) {
         if let lineBreak = lineBreak {
             append(lineBreak: lineBreak, environment: environment)
         }
         if typesetBlock {
-            applyTypesettingEnvironment(environment: environment)
+            applyTypesettingEnvironment(
+                environment: environment,
+                typesetRange: typesetRange ?? NSAttributedString.RangeOptions.ignoreWhitespaceAtBothEnds
+            )
         }
         if !currentBlock.string.isEmpty {
             currentBlock.annotate(blockScopes: environment.blockScopes)
@@ -58,7 +68,7 @@ extension DocumentContext {
         currentBlock = NSMutableAttributedString()
     }
     internal consuming func finalize(environment: AttributeEnvironment) -> NSAttributedString {
-        applyTypesettingEnvironment(environment: environment)
+        applyTypesettingEnvironment(environment: environment, typesetRange: .ignoreWhitespaceAtBothEnds)
         buffer.append(currentBlock)
         return buffer
     }

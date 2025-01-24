@@ -280,7 +280,7 @@ extension AttributeEnvironment.TypesetEnvironment {
     internal var systemAttributeDictionary: NSAttributedString.AttributeDictionary {
         var attributes = NSAttributedString.AttributeDictionary(minimumCapacity: 5)
         let paragraphStyle = XMutableParagraphStyle()
-        let indentationMultiple = CGFloat(50)
+        let indentationMultiple = CGFloat(40)
         var baseIndentation = 0.0
         var trailingIndentation = 0.0
         for unit in baseIndentationLevels {
@@ -289,9 +289,13 @@ extension AttributeEnvironment.TypesetEnvironment {
         for unit in trailingIndentationLevels {
             trailingIndentation += unit.asDecimal * indentationMultiple
         }
+//        paragraphStyle.lineHeightMultiple = 1
+//        paragraphStyle.minimumLineHeight = 5
+//        paragraphStyle.lineSpacing = 8
+        paragraphStyle.paragraphSpacingBefore = 4
+        paragraphStyle.paragraphSpacing = 4
         paragraphStyle.firstLineHeadIndent = baseIndentation
         paragraphStyle.headIndent = baseIndentation + trailingIndentation
-        paragraphStyle.lineSpacing = 8
         attributes[.paragraphStyle] = paragraphStyle
         return attributes
     }
@@ -310,5 +314,13 @@ extension AttributeEnvironment {
             typesetEnvironment: typesetEnvironment,
             blockScopes: blockScopes.with(append: blockScope)
         )
+    }
+    internal func containsScope(blockType type: SSBlockType) -> Bool {
+        for blockScope in self.blockScopes {
+            if blockScope == type {
+                return true
+            }
+        }
+        return false
     }
 }

@@ -14,17 +14,26 @@ extension NSAttributedString {
 }
 
 extension NSAttributedString {
-    public var range: NSRange { NSRange(location: 0, length: self.length) }
+    public var range: NSRange {
+        NSRange(location: 0, length: self.length)
+    }
     public struct RangeOptions: OptionSet {
         public let rawValue: Int
         public init(rawValue: Int) {
             self.rawValue = rawValue
         }
-        public static let ignoreLeadingWhitespace = Self(rawValue: 1 << 1)
-        public static let ignoreTrailingWhitespace = Self(rawValue: 1 << 2)
-        public static let ignoreWhitespaceAtBothEnds: Self = [ Self.ignoreLeadingWhitespace, Self.ignoreTrailingWhitespace ]
+        public static let fullRange = Self(rawValue: 1 << 1)
+        public static let ignoreLeadingWhitespace = Self(rawValue: 1 << 2)
+        public static let ignoreTrailingWhitespace = Self(rawValue: 1 << 3)
+        public static let ignoreWhitespaceAtBothEnds: Self = [
+            Self.ignoreLeadingWhitespace,
+            Self.ignoreTrailingWhitespace,
+        ]
     }
     public func range(options: RangeOptions) -> NSRange? {
+        if options.contains(.fullRange) {
+            return self.range
+        }
         let startIndex = string
             .firstIndex { !$0.isWhitespace }
             .map {
@@ -33,10 +42,7 @@ extension NSAttributedString {
         let endIndex = string
             .lastIndex { !$0.isWhitespace }
             .map {
-                let result = string.distance(from: $0, to: string.endIndex)
-//                let result = $0.utf16Offset(in: string)
-                print("distance: \(result)")
-                return result
+                return string.distance(from: $0, to: string.endIndex)
             }
         if options.contains(.ignoreLeadingWhitespace) && options.contains(.ignoreTrailingWhitespace) {
             let startIndex = startIndex ?? 0
@@ -47,17 +53,14 @@ extension NSAttributedString {
                 location: startIndex,
                 length: length
             )
-            print(
-                "result", result,
-                startIndex.description,
-                endIndex.description,
-                result.upperBound.description,
-                "isValid:\(isValid)"
-            )
-            if !isValid {
-                return nil
+            if isValid {
+                return result
             }
-            return result
+            print(
+                "[FAILURE] NSAttributedString.range(options: RangeOptions) result=\(result.debugDescription)",
+                "startIndex=\(startIndex.description)",
+                "endIndex=\(endIndex.description)"
+            )
         }
         if options.contains(.ignoreLeadingWhitespace) {
             return NSRange(location: startIndex ?? 0, length: length - (startIndex ?? 0))

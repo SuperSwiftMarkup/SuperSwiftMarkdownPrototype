@@ -23,39 +23,45 @@ extension ParagraphState {
     }
     internal consuming func finalize(
         environment: AttributeEnvironment,
-        preceeding: NSAttributedString
+        initial: NSAttributedString
     ) -> NSMutableAttributedString {
         // - -
         lines.append(current)
         current = NSMutableAttributedString()
         // - -
-        let output = NSMutableAttributedString(attributedString: preceeding)
+        let output = NSMutableAttributedString(attributedString: initial)
         // - -
-        let baseAttributes = environment.systemAttributeDictionary(forEnvironment: .typesetting)
+        let baseAttributes = environment
+            .systemAttributeDictionary(forEnvironment: .typesetting)
         let postNewlineAttributes = environment
             .updateTypesetting { env in
                 env.modifyLineIndentSettings {
                     AttributeEnvironment.TypesetEnvironment.LineIndentSetting(
                         baseIndentationLevels: $0.baseIndentationLevels.with(extend: $0.trailingIndentationLevels),
-                        trailingIndentationLevels: []
+                        trailingIndentationLevels: $0.trailingIndentationLevels
                     )
                 }
             }
             .systemAttributeDictionary(forEnvironment: .typesetting)
         // - -
         output.beginEditing()
-        output.range(options: .ignoreWhitespaceAtBothEnds).map {
-            output.addAttributes(baseAttributes, range: $0)
-        }
+        let _ = output.range(options: .ignoreWhitespaceAtBothEnds)
+            .map {
+                output.addAttributes(baseAttributes, range: $0)
+            }!
         for (index, line) in lines.enumerated() {
             let line = NSMutableAttributedString(attributedString: line)
             let isLast = index + 1 == lines.count
             let isFirst = index == 0
+            if isFirst {
+                line.addAttributes(baseAttributes, range: line.range)
+            }
             if !isFirst {
                 line.addAttributes(postNewlineAttributes, range: line.range)
             }
             if !isLast {
-                line.append(NSAttributedString(string: "\n"))
+                let attributes = environment.systemAttributeDictionary(forEnvironment: .styling)
+                line.append(NSAttributedString(string: "\n", attributes: attributes))
             }
             output.append(line)
         }

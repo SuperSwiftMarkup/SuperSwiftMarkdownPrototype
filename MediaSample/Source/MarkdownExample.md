@@ -53,12 +53,19 @@
 > >    - Cyan
 > > 5. Epsilon
 
-### Example 2 : **TODO:** NOT WORKING (as of 2025-1-24)
+### Example 2
 
 > # Hello World
-> X
-> X Hello World X
-> X
+> Soft Line 1 : Text Text Text
+> Soft Line 2 : Text Text Text
+> Soft Line 3 : Text Text Text
+
+### Example 3
+
+> # Hello World
+> Soft Line 1
+> Soft Line 2
+> Soft Line 3
 > ```
 > code
 > ```
@@ -70,17 +77,21 @@
 > 
 > Hello World
 
-### Example 3 
+### Example 4
 
 > # Hello World
-> Line 1
-> Line 2
-> Line 3
-> Line 4
-> > Line 4.A
-> > Line 4.B
-> > Line 4.C
-> Line 5
+> Hard Line 1
+>
+> Hard Line 2
+>
+> Hard Line 3
+>
+> Hard Line 4
+> > Soft Line 4.A
+> > Soft Line 4.B
+> > Soft Line 4.C
+>
+> Hard Line 5
 
 
 # Headers
@@ -111,11 +122,32 @@ Alt-H2
 ## Showcase
 
 # h1 Heading 8-)
+
+Text Text Text
+
 ## h2 Heading
+
+Text Text Text
+
 ### h3 Heading
+
+Text Text Text
+
 #### h4 Heading
+
+Text Text Text
+
 ##### h5 Heading
+
+Text Text Text
+
 ###### h6 Heading
+
+Text Text Text
+
+Text Text Text
+
+Text Text Text
 
 Alternatively, for H1 and H2, an underline-ish style:
 

@@ -110,7 +110,7 @@ extension SSBlock.ParagraphNode {
         for child in self.children {
             child.attributedString(context: &paragraphState, environment: environment)
         }
-        context.push(paragraphState: paragraphState, environment: environment, endingLineBreak: .hardLineBreak)
+        context.push(paragraphState: paragraphState, environment: environment)
         context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: false)
     }
 }
@@ -121,9 +121,9 @@ extension SSBlock.HeadingNode {
             .updateStyling {
                 $0  .with(foregroundColor: ThemeDefaults.Colors.Block.Header.textForeground)
             }
-            .updateTypesetting {
-                $0  .clearTrailingIndentationLevel()
-            }
+//            .updateTypesetting {
+//                $0  .clearTrailingIndentationLevel()
+//            }
             .updateTypesetting {
                 $0  .extend(trailingIndentationLevel: .whole)
             }
@@ -137,7 +137,7 @@ extension SSBlock.HeadingNode {
         for child in self.children {
             child.attributedString(context: &paragraphState, environment: environment)
         }
-        context.push(paragraphState: paragraphState, environment: environment, endingLineBreak: .hardLineBreak)
+        context.push(paragraphState: paragraphState, environment: environment)
         context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: false)
     }
 }
@@ -165,11 +165,23 @@ extension SSBlock.CodeBlockNode {
                     .mapFontSize { $0 * 0.8 }
                     .with(foregroundColor: ThemeDefaults.Colors.Block.codeBlock)
             }
+//            .updateTypesetting {
+//                $0  .extend(baseIndentationLevel: .half)
+//                    .extend(trailingIndentationLevel: .whole)
+//            }
+//            .updateTypesetting { env in
+//                env.modifyLineIndentSettings { indent in
+//                    AttributeEnvironment.TypesetEnvironment.LineIndentSetting(
+//                        baseIndentationLevels: indent.baseIndentationLevels.with(extend: indent.trailingIndentationLevels),
+//                        trailingIndentationLevels: indent.baseIndentationLevels.with(extend: indent.trailingIndentationLevels)
+//                    )
+//                }
+//            }
         context.append(string: "```", environment: environment)
         context.append(lineBreak: .hardLineBreak, environment: environment)
         context.append(string: value, environment: environment)
         context.append(string: "```", environment: environment)
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true, typesetRange: [])
     }
 }
 extension SSBlock.ThematicBreakNode {
@@ -229,9 +241,9 @@ extension SSBlock.ListItemNode {
         let unchecked = uncheckedCircle
         let checked = checkedBox
         let space = "\u{2008}"
-//        let bullet = "•"
+        let bullet = "•"
         let dash = "—"
-        let unorderedListItem = dash
+        let unorderedListItem = bullet
         let token: String
         switch (itemType, self.checkbox) {
         case (.ordered(let count), .some(.unchecked)):

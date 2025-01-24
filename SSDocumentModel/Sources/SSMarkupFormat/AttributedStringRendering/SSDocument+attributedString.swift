@@ -11,16 +11,13 @@ extension SSDocument {
     public func compileAttributedString() -> NSAttributedString {
         var context = DocumentContext()
         let environment = AttributeEnvironment.default
-        for (index, block) in self.blocks.enumerated() {
-            let isLast = self.blocks.count == index + 1
+        for block in self.blocks {
             block.attributedString(context: &context, environment: environment)
-            context.append(lineBreak: .hardLineBreak, environment: environment)
-//            context.append(lineBreak: .hardLineBreak, environment: environment)
-//            if !isLast {
-////                context.append(lineBreak: .paragraphBreak, environment: environment)
-//                context.append(lineBreak: .hardLineBreak, environment: environment)
-//            }
-            let _ = isLast
+            context.endBlock(
+                lineBreak: .hardLineBreak,
+                environment: environment,
+                typesetBlock: false
+            )
         }
         return context.finalize(environment: environment)
     }
