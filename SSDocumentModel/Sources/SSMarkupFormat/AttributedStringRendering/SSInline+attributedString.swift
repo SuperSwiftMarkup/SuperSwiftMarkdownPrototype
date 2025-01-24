@@ -171,7 +171,7 @@ fileprivate func renderLink(
         }
         context.append(string: "]", environment: childEnvironment)
     }
-    if destination != nil && title != nil {
+    if destination != nil || title != nil {
         context.append(string: "(", environment: tokenEnvironment)
         if let destination = destination {
             context.append(string: destination, environment: linkEnvironment)
