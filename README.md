@@ -121,3 +121,8 @@ But in a context specific manner—by default—that ignores text in HTML tags, 
 - Automatic lazy loading of syntax highlighting code when available. 
 - Additional smart spell checking support for comments within code blocks.
 
+## Screenshots (as of 2025-1-23)
+
+![MarkdownPreview](screenshots/2025-1-23-markdown-preview.png)
+
+![MarkdownPreviewDebugView](screenshots/2025-1-23-markdown-preview-debug-view.png)

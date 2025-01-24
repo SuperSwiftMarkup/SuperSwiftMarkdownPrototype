@@ -14,7 +14,7 @@ public enum SSBlock {
     case table(TableNode)
     case paragraph(ParagraphNode)
     case heading(HeadingNode)
-    case hTMLBlock(HTMLBlockNode)
+    case htmlBlock(HTMLBlockNode)
     case codeBlock(CodeBlockNode)
     case thematicBreak(ThematicBreakNode)
 }
@@ -138,7 +138,7 @@ extension SSBlock.HeadingNode: SomeBlockNode {
     public var block: SSBlock { .heading(self) }
 }
 extension SSBlock.HTMLBlockNode: SomeBlockNode {
-    public var block: SSBlock { .hTMLBlock(self) }
+    public var block: SSBlock { .htmlBlock(self) }
 }
 extension SSBlock.CodeBlockNode: SomeBlockNode {
     public var block: SSBlock { .codeBlock(self) }

@@ -23,7 +23,7 @@ extension SSBlock {
             node.attributedString(context: &context, environment: environment)
         case .heading(let node):
             node.attributedString(context: &context, environment: environment)
-        case .hTMLBlock(let node):
+        case .htmlBlock(let node):
             node.attributedString(context: &context, environment: environment)
         case .codeBlock(let node):
             node.attributedString(context: &context, environment: environment)
@@ -36,6 +36,7 @@ extension SSBlock {
 extension SSBlock.BlockQuoteNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
+            .with(blockScope: .blockQuote)
             .updateStyling {
                 $0  .with(backgroundColor: .red.with(alpha: 0.25), updateType: .preferExisting)
             }
@@ -53,6 +54,7 @@ extension SSBlock.OrderedListNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
 //        context.beginNewBlock(environment: environment)
         let environment = environment
+            .with(blockScope: .orderedList)
 //            .updateStyling {
 //                $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
 //            }
@@ -73,6 +75,7 @@ extension SSBlock.OrderedListNode {
 extension SSBlock.UnorderedListNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
+            .with(blockScope: .unorderedList)
 //            .updateStyling {
 //                $0  .with(backgroundColor: .blue.with(alpha: 0.1), updateType: .preferExisting)
 //            }
@@ -92,9 +95,11 @@ extension SSBlock.UnorderedListNode {
 }
 extension SSBlock.TableNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
-        let environment = environment.updateStyling {
-            $0.with(fontDesign: .monospaced)
-        }
+        let environment = environment
+            .with(blockScope: .table)
+            .updateStyling {
+                $0.with(fontDesign: .monospaced)
+            }
         context.append(string: "<<TABLE>>", environment: environment)
         context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
     }
@@ -102,13 +107,7 @@ extension SSBlock.TableNode {
 extension SSBlock.ParagraphNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
-//            .updateTypesetting {
-//                $0  .clearTrailingIndentationLevel()
-//            }
-//            .updateTypesetting {
-//                $0  .extend(trailingIndentationLevel: .whole)
-//                    .extend(baseIndentationLevel: .half)
-//            }
+            .with(blockScope: .paragraph)
         var paragraphState = ParagraphState()
         for child in self.children {
             child.attributedString(context: &paragraphState, environment: environment)
@@ -120,6 +119,7 @@ extension SSBlock.ParagraphNode {
 extension SSBlock.HeadingNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = level.environment(environment: environment)
+            .with(blockScope: .heading)
             .updateTypesetting {
                 $0  .clearTrailingIndentationLevel()
             }
@@ -143,9 +143,12 @@ extension SSBlock.HeadingNode {
 extension SSBlock.HTMLBlockNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
+            .with(blockScope: .htmlBlock)
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
+                    .with(fontWeight: .light)
                     .mapFontSize { $0 * 0.8 }
+                    .with(foregroundColor: codeOrMarkupForegroundColor)
             }
         context.append(string: self.value, environment: environment)
         context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
@@ -154,9 +157,12 @@ extension SSBlock.HTMLBlockNode {
 extension SSBlock.CodeBlockNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
+            .with(blockScope: .codeBlock)
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
+                    .with(fontWeight: .light)
                     .mapFontSize { $0 * 0.8 }
+                    .with(foregroundColor: codeOrMarkupForegroundColor)
             }
         context.append(string: "```", environment: environment)
         context.append(lineBreak: .hardLineBreak, environment: environment)
@@ -168,6 +174,7 @@ extension SSBlock.CodeBlockNode {
 extension SSBlock.ThematicBreakNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
+            .with(blockScope: .thematicBreak)
             .updateStyling {
                 $0.with(fontDesign: .monospaced)
             }
@@ -175,6 +182,8 @@ extension SSBlock.ThematicBreakNode {
         context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
     }
 }
+
+fileprivate let codeOrMarkupForegroundColor: SSColorMap = .init(singleton: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
 
 // MARK: - INTERNAL HELPERS -
 
@@ -185,6 +194,8 @@ extension SSBlock.ListItemNode {
         itemType: SSBlock.ListItemNode.ListItemType
     ) {
         let environment = environment
+            .with(blockScope: .listItem)
+//            .with(blockScope: .thematicBreak)
 //            .updateTypesetting {
 //                $0  .extend(baseIndentationLevel: .half)
 //            }

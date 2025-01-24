@@ -11,13 +11,20 @@ import SSDMUtilities
 internal final class AttributeEnvironment {
     fileprivate let styleEnvironment: StyleEnvironment
     fileprivate let typesetEnvironment: TypesetEnvironment
-    fileprivate init(styleEnvironment: StyleEnvironment, typesetEnvironment: TypesetEnvironment) {
+    fileprivate let blockScopes: [ SSBlockType ]
+    fileprivate init(
+        styleEnvironment: StyleEnvironment,
+        typesetEnvironment: TypesetEnvironment,
+        blockScopes: [ SSBlockType ]
+    ) {
         self.styleEnvironment = styleEnvironment
         self.typesetEnvironment = typesetEnvironment
+        self.blockScopes = blockScopes
     }
     internal static let `default`: AttributeEnvironment = AttributeEnvironment.init(
         styleEnvironment: .init(),
-        typesetEnvironment: .init()
+        typesetEnvironment: .init(),
+        blockScopes: []
     )
     enum EnvironmentType {
         case styling
@@ -152,21 +159,21 @@ extension AttributeEnvironment.TypesetEnvironment {
 
 extension AttributeEnvironment {
     internal func updateStyling(_ function: @escaping (StyleEnvironment) -> StyleEnvironment) -> AttributeEnvironment {
-        .init(styleEnvironment: function(styleEnvironment), typesetEnvironment: typesetEnvironment)
+        .init(styleEnvironment: function(styleEnvironment), typesetEnvironment: typesetEnvironment, blockScopes: blockScopes)
     }
     internal func updateTypesetting(_ function: @escaping (TypesetEnvironment) -> TypesetEnvironment) -> AttributeEnvironment {
-        .init(styleEnvironment: styleEnvironment, typesetEnvironment: function(typesetEnvironment))
+        .init(styleEnvironment: styleEnvironment, typesetEnvironment: function(typesetEnvironment), blockScopes: blockScopes)
     }
     internal func updateStyling(ifTrue flag: Bool, apply: @escaping (StyleEnvironment) -> StyleEnvironment) -> AttributeEnvironment {
         if flag {
-            return .init(styleEnvironment: apply(styleEnvironment), typesetEnvironment: typesetEnvironment)
+            return .init(styleEnvironment: apply(styleEnvironment), typesetEnvironment: typesetEnvironment, blockScopes: blockScopes)
         } else {
             return self
         }
     }
     internal func updateTypesetting(ifTrue flag: Bool, apply: @escaping (TypesetEnvironment) -> TypesetEnvironment) -> AttributeEnvironment {
         if flag {
-            return .init(styleEnvironment: styleEnvironment, typesetEnvironment: apply(typesetEnvironment))
+            return .init(styleEnvironment: styleEnvironment, typesetEnvironment: apply(typesetEnvironment), blockScopes: blockScopes)
         } else {
             return self
         }
@@ -293,5 +300,12 @@ extension AttributeEnvironment {
         case .styling: return self.styleEnvironment.systemAttributeDictionary
         case .typesetting: return self.typesetEnvironment.systemAttributeDictionary
         }
+    }
+    internal func with(blockScope: SSBlockType) -> AttributeEnvironment {
+        AttributeEnvironment(
+            styleEnvironment: styleEnvironment,
+            typesetEnvironment: typesetEnvironment,
+            blockScopes: blockScopes.with(append: blockScope)
+        )
     }
 }
