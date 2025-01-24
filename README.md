@@ -123,11 +123,17 @@ But in a context specific manner—by default—that ignores text in HTML tags, 
 
 ## Screenshots (as of 2025-1-23)
 
-### MarkdownPreview
-![MarkdownPreview](screenshots/2025-1-23-markdown-preview.png)
+### Basic
+![preview 1 light mode](screenshots/2025-1-23/preview-1-light-mode.png)
 
-### MarkdownPreview Debug View
-![MarkdownPreviewDebugView](screenshots/2025-1-23-markdown-preview-debug-view.png)
+![preview 2 dark mode](screenshots/2025-1-23/preview-2-dark-mode.png)
 
-### MarkdownPreview — Dark Mode
-![MarkdownPreview](screenshots/2025-1-23-markdown-preview-dark-mode.png)
+### Debug Mode
+![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
+
+### Text Selection
+![text selection dark mode](screenshots/2025-1-23/text-selection-dark-mode.png)
+
+Multi-cursor display:
+![text selection multi cursor light mode](screenshots/2025-1-23/text-selection-multi-cursor-light-mode.png)
+

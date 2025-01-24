@@ -41,7 +41,7 @@ extension ThemeDefaults.Colors {
 //        public static let strong: SSColorMap = .default
         public static let inlineCodeTextForeground: SSColorMap = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.2763588325, green: 0.2962728927, blue: 0.3337086742, alpha: 1))
         public static let inlineCodeTokenForeground: SSColorMap = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)).with(alpha: 0.9)
-        public static let inlineCodeBackground: SSColorMap = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.3068073281, green: 0.3135197746, blue: 0.3261382803, alpha: 1)).with(alpha: 0.5)
+        public static let inlineCodeBackground: SSColorMap = SSColorMap(light: #colorLiteral(red: 0.8967235978, green: 0.8967235978, blue: 0.8967235978, alpha: 1), dark: #colorLiteral(red: 0.3068073281, green: 0.3135197746, blue: 0.3261382803, alpha: 1)).with(alpha: 0.5)
         public static let inlineHTML: SSColorMap = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1))
 //        public static let lineBreak: SSColorMap = .default
 //        public static let softBreak: SSColorMap = .default
