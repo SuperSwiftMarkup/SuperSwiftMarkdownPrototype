@@ -55,7 +55,8 @@ editor in read only mode.
 
 Typographic boundaries are denoted by the dotted borders as shown in the above.
 Blue outlines denote primary lines while the trailing wrapped lines are denoted
-by dotted red borders. 
+by dotted red borders. The centered red dots at the left margin denote the actual
+layout fragments in the view. 
 
 **Text Selection:**
 ![text selection dark mode](screenshots/2025-1-23/text-selection-dark-mode.png)
