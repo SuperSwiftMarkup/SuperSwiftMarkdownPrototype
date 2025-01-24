@@ -24,7 +24,7 @@
     - On the eighth of September an officer--a very important one judging by the respect the guards showed him--entered the coach house where the prisoners were.
     - [Link 1](http://example.com)
     - [Link 2](http://example.com)
-   ### Completed Work
+   ### Greek Letters
     - [x] *Omega* (**Ωω**) `101`
     - [ ] *Psi* (**Ψ𝛙**) `101`
     - [ ] *Chi* (**Χχ**) `101`
