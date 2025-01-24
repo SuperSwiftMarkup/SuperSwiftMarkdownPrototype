@@ -123,5 +123,8 @@ But in a context specific manner—by default—that ignores text in HTML tags, 
 
 ## Screenshots (as of 2025-1-23)
 
+### MarkdownPreview
 ![MarkdownPreview](screenshots/2025-1-23-markdown-preview.png)
+
+### MarkdownPreview Debug View
 ![MarkdownPreviewDebugView](screenshots/2025-1-23-markdown-preview-debug-view.png)
