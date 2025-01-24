@@ -134,6 +134,6 @@ But in a context specific manner—by default—that ignores text in HTML tags, 
 ### Text Selection
 ![text selection dark mode](screenshots/2025-1-23/text-selection-dark-mode.png)
 
-Multi-cursor display:
+Multiple text selections are supported:
 ![text selection multi cursor light mode](screenshots/2025-1-23/text-selection-multi-cursor-light-mode.png)
 
