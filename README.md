@@ -40,7 +40,7 @@ After struggling with hacks and workarounds, it became clear that the root probl
 
 # Current Development Preview
 
-## Screenshots (as of 2025-1-23)
+## Screenshots (as of 2025-1-24)
 
 If it hasn’t already been mentioned the current focus is read only rendering
 with text selection and general navigation—what users would expect from a text
