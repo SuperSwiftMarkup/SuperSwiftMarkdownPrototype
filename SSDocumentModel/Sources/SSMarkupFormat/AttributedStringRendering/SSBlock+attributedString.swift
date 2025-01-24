@@ -37,11 +37,11 @@ extension SSBlock.BlockQuoteNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
             .with(blockScope: .blockQuote)
-            .updateStyling {
-                $0  .with(backgroundColor: .red.with(alpha: 0.25), updateType: .preferExisting)
-            }
+//            .updateStyling {
+//                $0  .with(backgroundColor: .red.with(alpha: 0.25), updateType: .preferExisting)
+//            }
             .updateTypesetting {
-                $0  .extend(baseIndentationLevel: .whole)
+                $0  .extend(baseIndentationLevel: .half)
             }
         for child in self.children {
             child.attributedString(context: &context, environment: environment)

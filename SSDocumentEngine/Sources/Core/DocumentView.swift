@@ -36,7 +36,7 @@ internal final class DocumentView: NSView {
     var documentViewController: DocumentViewController!
     
     // MARK: - INTERNAL SETUP -
-    var showLayerFrames: Bool = true
+//    var showLayerFrames: Bool = true
     var slowAnimations: Bool = false
     
     // MARK: - TEXT RENDERING -
@@ -77,10 +77,10 @@ internal final class DocumentView: NSView {
     
     func commonInit() {
         wantsLayer = true
-        selectionLayer = TextDocumentLayer()
         contentLayer = TextDocumentLayer()
-        layer?.addSublayer(selectionLayer)
+        selectionLayer = TextDocumentLayer()
         layer?.addSublayer(contentLayer)
+        layer?.addSublayer(selectionLayer)
         fragmentLayerMap = NSMapTable.weakToWeakObjects()
 //        translatesAutoresizingMaskIntoConstraints = false
         autoresizingMask = [ .width, .height ]

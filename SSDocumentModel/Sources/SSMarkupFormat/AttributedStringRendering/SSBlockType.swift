@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SSDMUtilities
 
 public enum SSBlockType: String {
     case blockQuote = "BlockQuote"
@@ -29,5 +30,27 @@ extension NSAttributedString.Key {
 extension NSMutableAttributedString {
     internal func annotate(blockScopes: [SSBlockType]) {
         addAttribute(.blockScopes, value: blockScopes, range: self.range)
+    }
+}
+
+extension NSAttributedString {
+    public typealias SSBlockTypeArray = [ SSBlockType ]
+    public func lookupBlockScopes() -> [SSBlockType]? {
+//        self.enumerateAttribute(.blockScopes, in: self.range) { value, range, _ in
+//            if let value = value as? SSBlockTypeArray {
+//                let stringDebug = self.string.truncated(limit: 80, position: .middle).debugDescription
+//                let scopesString = value.map { $0.rawValue }.joined(separator: ".")
+//                print("SCOPE: \(stringDebug):", scopesString)
+//            }
+//        }
+        if let attribute = self.attribute(.blockScopes, at: 0, effectiveRange: nil) {
+            if let value = attribute as? SSBlockTypeArray {
+//                let stringDebug = self.string.truncated(limit: 80, position: .middle).debugDescription
+//                let scopesString = value.map { $0.rawValue }.joined(separator: ".")
+//                print("SCOPE: \(stringDebug):", scopesString)
+                return value
+            }
+        }
+        return nil
     }
 }

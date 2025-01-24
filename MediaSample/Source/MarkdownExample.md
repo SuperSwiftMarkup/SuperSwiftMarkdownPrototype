@@ -46,6 +46,7 @@
 ### Example 1
 
 > ## In Block Quote
+> > ### In Nested Block Quote
 > > 4. Delta
 > >    - Teal
 > >    - Indigo

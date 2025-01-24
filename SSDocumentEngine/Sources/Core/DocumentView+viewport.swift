@@ -44,7 +44,6 @@ extension DocumentView: NSTextViewportLayoutControllerDelegate {
         updateSelectionHighlights()
         updateContentSizeIfNeeded()
         adjustViewportOffsetIfNeeded()
-        postLayoutDebug()
     }
     /// Called when textViewportLayoutController lays out a given textLayoutFragment.
     /// The delegate should arrange to present the text layout fragment in the UI, e.g. a sublayer/subview.
@@ -66,10 +65,10 @@ extension DocumentView: NSTextViewportLayoutControllerDelegate {
                 animate(layer, from: oldPosition, to: layer.position)
             }
         }
-        if layer.showLayerFrames != showLayerFrames {
-            layer.showLayerFrames = showLayerFrames
-            layer.setNeedsDisplay()
-        }
+//        if layer.showLayerFrames != showLayerFrames {
+//            layer.showLayerFrames = showLayerFrames
+//            layer.setNeedsDisplay()
+//        }
         
         contentLayer.addSublayer(layer)
     }
