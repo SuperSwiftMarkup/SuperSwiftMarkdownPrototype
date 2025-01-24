@@ -20,15 +20,17 @@
     - The Tao doesn't take sides; it gives birth to both wins and losses.
     - The Guru doesn't take sides; she welcomes both hackers and lusers.
     - The Tao is like a stack: the data changes but not the structure; the more you use it, the deeper it becomes; the more you talk of it, the less you understand.
-2. Item Two — The subject for history is not man's will itself but our presentation of it.
+2. Item Two—Overflow Text—The subject for history is not man's will itself but our presentation of it.
     - On the eighth of September an officer--a very important one judging by the respect the guards showed him--entered the coach house where the prisoners were.
-   ### Completed Work — Some Other Nested List
-    - [x] Omega Ωω
-    - [ ] Psi Ψ𝛙
-    - [ ] Chi Χχ
-    - [x] Phi Φφ
-    - [x] Upsilon Υυ
-    - [ ] Tau Ττ
+    - [Link 1](http://example.com)
+    - [Link 2](http://example.com)
+   ### Completed Work
+    - [x] *Omega* (**Ωω**) `101`
+    - [ ] *Psi* (**Ψ𝛙**) `101`
+    - [ ] *Chi* (**Χχ**) `101`
+    - [x] *Phi* (**Φφ**) `101`
+    - [x] *Upsilon* (**Υυ**) `101`
+    - [ ] *Tau* (**Ττ**) `101`
 3. Item 3
    The subject for history is not man's will itself but our presentation of it.
    ### SubList

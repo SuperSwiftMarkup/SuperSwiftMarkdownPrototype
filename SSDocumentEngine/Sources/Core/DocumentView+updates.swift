@@ -29,13 +29,13 @@ extension DocumentView {
                 if highlightFrame.size.width > 0 {
                     // SELECTION HIGHLIGHT LAYER
                     let highlightSubLayer = TextDocumentLayer()
-                    highlightSubLayer.backgroundColor = selectionColor.cgColor
+                    highlightSubLayer.backgroundColor = selectionColor.adaptiveColor.cgColor
                     highlightSubLayer.frame = highlightFrame
                     selectionLayer.addSublayer(highlightSubLayer)
                 } else {
                     // JUST THE CURSOR LAYER
                     let cursorSubLayer = TextDocumentCursorLayer()
-                    cursorSubLayer.backgroundColor = caretColor.cgColor
+                    cursorSubLayer.backgroundColor = caretColor.adaptiveColor.cgColor
                     cursorSubLayer.frame = highlightFrame.replacing(width: 2)
                     cursorSubLayer.setBlinkingCursorMode(enableBlinking: true)
                     selectionLayer.addSublayer(cursorSubLayer)

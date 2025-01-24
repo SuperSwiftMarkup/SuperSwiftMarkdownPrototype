@@ -50,6 +50,10 @@ editor in read only mode.
 
 ![preview 2 dark mode](screenshots/2025-1-23/preview-2-dark-mode.png)
 
+![preview 3 light mode](screenshots/2025-1-24/preview-3-light-mode.png)
+
+![preview 4 dark mode](screenshots/2025-1-24/preview-4-dark-mode.png)
+
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
 

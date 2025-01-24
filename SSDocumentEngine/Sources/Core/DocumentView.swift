@@ -13,6 +13,7 @@ import UIKit
 import SSDMUtilities
 
 internal final class DocumentView: NSView {
+    // MARK: - TextKit -
     var textLayoutManager: NSTextLayoutManager? {
         willSet {
             if let tlm = textLayoutManager {
@@ -34,32 +35,35 @@ internal final class DocumentView: NSView {
     var textContentStorage: NSTextContentManager?
     var documentViewController: DocumentViewController!
     
+    // MARK: - INTERNAL SETUP -
     var showLayerFrames: Bool = true
     var slowAnimations: Bool = false
     
+    // MARK: - TEXT RENDERING -
     var contentLayer: CALayer! = nil
     var selectionLayer: CALayer! = nil
     var fragmentLayerMap: NSMapTable<NSTextLayoutFragment, CALayer>
     var padding: CGFloat = 5.0
     
-    // Colors support.
-    var selectionColor: NSColor {
+    // MARK: - COLORS & COLOR SCHEME STATE -
+    var selectionColor: SSColorMap {
         SSColorMap(
-            light: {
-                .systemBlue.withAlphaComponent(0.2)
-            },
-            dark: {
-                .systemBlue.withAlphaComponent(0.5)
-            }
+            light: .systemBlue.withAlphaComponent(0.2),
+            dark: .systemBlue.withAlphaComponent(0.5)
         )
-        .adaptiveColor
     }
-    var caretColor: NSColor { .systemBlue }
-    
-    var boundsDidChangeObserver: Any? = nil
-    
+    var caretColor: SSColorMap {
+        SSColorMap(
+            light: .systemBlue,
+            dark: .systemBlue
+        )
+    }
     var appliedColorScheme: SSColorSchemeMode? = nil
     
+    // MARK: - MISCELLANEOUS -
+    var boundsDidChangeObserver: Any? = nil
+    
+    // MARK: - INITIALIZATION & DE-INITIALIZATION -
     override init(frame: CGRect) {
         print("INIT: FRAME")
         fragmentLayerMap = .weakToWeakObjects()
@@ -82,11 +86,6 @@ internal final class DocumentView: NSView {
         autoresizingMask = [ .width, .height ]
         postsBoundsChangedNotifications = true
         postsFrameChangedNotifications = true
-        _defaultStylingAttributes = [
-            .paragraphStyle: NSParagraphStyle.default,
-            .font: NSFont.preferredFont(forTextStyle: .body),
-            .foregroundColor: NSColor.labelColor
-        ]
     }
     
     deinit {
@@ -95,11 +94,11 @@ internal final class DocumentView: NSView {
        }
     }
     
-    override var isFlipped: Bool { true }
-    // NSResponder
+    // MARK: - NSResponder / VIEW STATE -
     override var acceptsFirstResponder: Bool { true }
+    override var isFlipped: Bool { true }
     
-    // Responsive scrolling.
+    // MARK: - Responsive scrolling. -
     override class var isCompatibleWithResponsiveScrolling: Bool { true }
     override func prepareContent(in rect: NSRect) {
         layer!.setNeedsLayout()
@@ -113,10 +112,7 @@ internal final class DocumentView: NSView {
         }
     }
     
-    internal var _defaultStylingAttributes: [ NSAttributedString.Key: Any ] = [:]
-    internal var _stylingAttributes: [NSAttributedString.Key: Any] = [:]
-//    internal var colorScheme: CoreColorScheme? = nil
-    
+    // MARK: - TEXT SELECTION PROPERTIES -
     /// A dragging selection anchor
     ///
     /// FB11898356 - Something if wrong with textSelectionsInteractingAtPoint
@@ -125,7 +121,6 @@ internal final class DocumentView: NSView {
     /// location is too close to each other, therefore `mouseDraggingSelectionAnchors`
     /// keep the anchors unchanged while dragging.
     internal var pointerDraggingSelectionAnchors: [NSTextSelection]? = nil
-    
     internal var focusSelectionRequest: FocusSelectionRequest? = nil {
         didSet {
             if focusSelectionRequest != nil {
