@@ -54,9 +54,9 @@ editor in read only mode.
 
 ![preview 4 dark mode](screenshots/2025-1-24/preview-4-dark-mode.png)
 
-![blockquote preview 1 light mode](screenshots/2025-1-24/preview-blockquote-1-light-mode)
+![blockquote preview 1 light mode](screenshots/2025-1-24/preview-blockquote-1-light-mode.png)
 
-![blockquote preview 2 dark mode](screenshots/2025-1-24/preview-blockquote-2-light-mode)
+![blockquote preview 2 dark mode](screenshots/2025-1-24/preview-blockquote-2-light-mode.png)
 
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
