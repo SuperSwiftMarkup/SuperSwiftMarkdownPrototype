@@ -52,13 +52,12 @@ extension SSInline.EmphasisNode {
 }
 extension SSInline.ImageLinkNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
-        context.append(string: "!", environment: environment)
-        renderLink(context: &context, environment: environment, children: display, destination: source, title: title)
+        renderLink(context: &context, environment: environment, children: display, destination: source, title: title, imageMode: true)
     }
 }
 extension SSInline.LinkNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
-        renderLink(context: &context, environment: environment, children: display, destination: destination, title: title)
+        renderLink(context: &context, environment: environment, children: display, destination: destination, title: title, imageMode: false)
     }
 }
 extension SSInline.StrikethroughNode {
@@ -141,15 +140,16 @@ fileprivate func renderLink(
     environment: AttributeEnvironment,
     children: [ SSInline ]?,
     destination: String?,
-    title: String?
+    title: String?,
+    imageMode: Bool
 ) {
-    let linkColor = SSColorMap(
-        light: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)},
-        dark: {#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)}
-    )
+    let linkColor = SSColorMap( light: #colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1), dark: #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1) )
+    let tokenColor = SSColorMap( light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1) )
     let tokenEnvironment = environment
         .updateStyling {
             $0  .with(fontWeight: .light)
+                .with(fontDesign: .rounded)
+                .with(foregroundColor: tokenColor)
         }
     let linkEnvironment = environment.updateStyling {
         $0  .with(fontWeight: .light)
@@ -163,12 +163,15 @@ fileprivate func renderLink(
         .updateStyling(ifTrue: destination == nil) {
             $0  .with(foregroundColor: linkColor)
         }
+    if imageMode {
+        context.append(string: "!", environment: tokenEnvironment)
+    }
     if let children = children {
-        context.append(string: "[", environment: childEnvironment)
+        context.append(string: "[", environment: tokenEnvironment)
         for child in children {
             child.attributedString(context: &context, environment: childEnvironment)
         }
-        context.append(string: "]", environment: childEnvironment)
+        context.append(string: "]", environment: tokenEnvironment)
     }
     if destination != nil || title != nil {
         context.append(string: "(", environment: tokenEnvironment)

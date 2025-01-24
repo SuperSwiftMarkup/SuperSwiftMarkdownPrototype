@@ -22,7 +22,6 @@ extension DocumentContext {
         currentBlock.append(segment)
     }
     internal mutating func append(lineBreak: LineBreakType, environment: AttributeEnvironment) {
-        let isEmpty = self.currentBlock.string.isEmpty
         switch lineBreak {
         case .softLineBreak:
             append(string: "\n", environment: environment)
