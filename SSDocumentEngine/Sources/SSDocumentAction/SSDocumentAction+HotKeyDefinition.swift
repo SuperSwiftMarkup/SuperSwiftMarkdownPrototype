@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension ShortcutAction {
+extension SSDocumentAction {
     public struct HotKeyDefinition: Codable, Equatable, Hashable {
         public let modifiers: Set<ModifierKey>
         public let primaryKey: PrimaryKey
@@ -19,7 +19,7 @@ extension ShortcutAction {
 }
 
 
-extension ShortcutAction.HotKeyDefinition {
+extension SSDocumentAction.HotKeyDefinition {
     // Enum for Modifier Keys
     public enum ModifierKey: Codable, Equatable, Hashable {
         case shift
@@ -127,7 +127,7 @@ extension ShortcutAction.HotKeyDefinition {
     }
 }
 
-extension ShortcutAction.HotKeyDefinition.ModifierKey {
+extension SSDocumentAction.HotKeyDefinition.ModifierKey {
     public var display: String {
         switch self {
         case .shift: return "⇧"
@@ -140,7 +140,7 @@ extension ShortcutAction.HotKeyDefinition.ModifierKey {
 }
 
 
-extension ShortcutAction.HotKeyDefinition.PrimaryKey {
+extension SSDocumentAction.HotKeyDefinition.PrimaryKey {
     public var display: String {
         switch self {
         case .a: return "A"
@@ -241,7 +241,7 @@ extension ShortcutAction.HotKeyDefinition.PrimaryKey {
     }
 }
 
-extension ShortcutAction.HotKeyDefinition {
+extension SSDocumentAction.HotKeyDefinition {
     public var display: String {
         let modifiersDisplay = modifiers.map { $0.display }.sorted().joined(separator: " + ")
         let primaryKeyDisplay = primaryKey.display

@@ -12,10 +12,8 @@ import UIKit
 #endif
 
 extension DocumentView: NSTextViewportLayoutControllerDelegate {
+    /// The current viewport, typically the view visible bounds with overdraw.
     func viewportBounds(for textViewportLayoutController: NSTextViewportLayoutController) -> CGRect {
-//        if let enclosingScrollView = enclosingScrollView {
-//            return enclosingScrollView.contentView.documentRect
-//        }
         let overdrawRect = preparedContentRect
         let visibleRect = self.visibleRect
         var minY: CGFloat = 0
@@ -33,11 +31,24 @@ extension DocumentView: NSTextViewportLayoutControllerDelegate {
         }
         return CGRect(x: bounds.minX, y: minY, width: bounds.width, height: maxY - minY)
     }
-    
+    /// Called when textViewportLayoutController is about to layout.
+    /// Layout information on textViewportLayoutController is up-to-date at the point of this call.
     func textViewportLayoutControllerWillLayout(_ controller: NSTextViewportLayoutController) {
         contentLayer.sublayers = nil
         CATransaction.begin()
     }
+    /// Called when textViewportLayoutController is about to layout.
+    /// Layout information on textViewportLayoutController is up-to-date at the point of this call.
+    func textViewportLayoutControllerDidLayout(_ controller: NSTextViewportLayoutController) {
+        CATransaction.commit()
+        updateSelectionHighlights()
+        updateContentSizeIfNeeded()
+        adjustViewportOffsetIfNeeded()
+        postLayoutDebug()
+    }
+    /// Called when textViewportLayoutController lays out a given textLayoutFragment.
+    /// The delegate should arrange to present the text layout fragment in the UI, e.g. a sublayer/subview.
+    /// Layout information such as viewportBounds on textViewportLayoutController is not up-to-date at the point of this call.
     func textViewportLayoutController(
         _ controller: NSTextViewportLayoutController,
         configureRenderingSurfaceFor textLayoutFragment: NSTextLayoutFragment
@@ -62,15 +73,11 @@ extension DocumentView: NSTextViewportLayoutControllerDelegate {
         
         contentLayer.addSublayer(layer)
     }
-    
-    func textViewportLayoutControllerDidLayout(_ controller: NSTextViewportLayoutController) {
-        CATransaction.commit()
-        updateSelectionHighlights()
-        updateContentSizeIfNeeded()
-        adjustViewportOffsetIfNeeded()
-        postLayoutDebug()
-    }
-    
+}
+
+// MARK: - INTERNAL HELPERS -
+
+extension DocumentView {
     private func findOrCreateLayer(_ textLayoutFragment: NSTextLayoutFragment) -> (TextLayoutFragmentLayer, Bool) {
         if let layer = fragmentLayerMap.object(forKey: textLayoutFragment) as? TextLayoutFragmentLayer {
             return (layer, false)

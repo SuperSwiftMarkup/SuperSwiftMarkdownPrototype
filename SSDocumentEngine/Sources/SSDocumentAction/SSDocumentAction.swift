@@ -1,11 +1,11 @@
 //
-//  ShortcutAction.swift
+//  SSDocumentAction.swift
 //  SuperTextDisplay
 //
 //  Created by Colbyn Wadman on 1/3/25.
 //
 
-public enum ShortcutAction: Codable, Equatable, Hashable {
+public enum SSDocumentAction: Codable, Equatable, Hashable {
     // MARK: - CORE -
     case forward
     case backward
@@ -485,7 +485,7 @@ public enum ShortcutAction: Codable, Equatable, Hashable {
     case openKeyboardViewer
 }
 
-extension ShortcutAction {
+extension SSDocumentAction {
     public var display: String {
         switch self {
         case .forward: return "Forward"

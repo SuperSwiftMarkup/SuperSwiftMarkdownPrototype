@@ -15,13 +15,13 @@ import UIKit
 
 import SSDocumentAction
 
-fileprivate typealias DocumentKeyBinding = ShortcutAction.KeyBinding
-fileprivate typealias DocumentShortcut = ShortcutAction
+fileprivate typealias DocumentKeyBinding = SSDocumentAction.KeyBinding
+fileprivate typealias DocumentShortcut = SSDocumentAction
 
 fileprivate let VERBOSE_DEBUG_MODE: Bool = false
 
 extension DocumentView {
-    func handleAction(action: ShortcutAction) {
+    internal func handleAction(action: SSDocumentAction) {
         switch action {
         case .forward: return _forward()
         case .backward: return _backward()
@@ -140,6 +140,8 @@ extension DocumentView {
         }
     }
 }
+
+// MARK: - INTERNAL -
 
 extension DocumentView {
     fileprivate func _forward() {

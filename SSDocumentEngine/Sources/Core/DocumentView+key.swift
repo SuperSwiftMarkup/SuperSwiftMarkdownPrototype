@@ -17,8 +17,8 @@ import SSDocumentAction
 
 extension DocumentView {
     override func keyDown(with event: NSEvent) {
-        if let hotKey = ShortcutAction.HotKeyDefinition.from(event: event) {
-            for binding in ShortcutAction.KeyBinding.allActions {
+        if let hotKey = SSDocumentAction.HotKeyDefinition.from(event: event) {
+            for binding in SSDocumentAction.KeyBinding.allActions {
                 if binding.hotKey == hotKey {
                     return handleAction(action: binding.shortcut)
                 }

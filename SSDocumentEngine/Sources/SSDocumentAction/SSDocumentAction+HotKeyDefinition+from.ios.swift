@@ -10,7 +10,7 @@ import Foundation
 #if os(iOS) || os(visionOS)
 import UIKit
 
-extension ShortcutAction.HotKeyDefinition.PrimaryKey {
+extension SSDocumentAction.HotKeyDefinition.PrimaryKey {
     internal static func from(uiKey: UIKey) -> Self? {
         // MARK: - DISPLAY KEYS -
         switch uiKey.characters {
@@ -144,7 +144,7 @@ extension ShortcutAction.HotKeyDefinition.PrimaryKey {
     }
 }
 
-extension ShortcutAction.HotKeyDefinition.ModifierKey {
+extension SSDocumentAction.HotKeyDefinition.ModifierKey {
     public static func from(uiKey: UIKey) -> Set<Self> {
         var results: Set<Self> = []
         if uiKey.modifierFlags.contains(.alphaShift) {
@@ -166,7 +166,7 @@ extension ShortcutAction.HotKeyDefinition.ModifierKey {
     }
 }
 
-extension ShortcutAction.HotKeyDefinition {
+extension SSDocumentAction.HotKeyDefinition {
     public static func from(uiKey: UIKey) -> Self? {
         let modifiers = ModifierKey.from(uiKey: uiKey)
         guard let primaryKey = PrimaryKey.from(uiKey: uiKey) else { return nil }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public extension ShortcutAction.KeyBinding {
+public extension SSDocumentAction.KeyBinding {
     static let bold: Self = Self(
         modifiers: [.command],
         primaryKey: .b,
@@ -657,7 +657,7 @@ public extension ShortcutAction.KeyBinding {
     )
 }
 
-extension ShortcutAction.KeyBinding {
+extension SSDocumentAction.KeyBinding {
     public static let allActions: [Self] = [
         .bold,
         .italic,

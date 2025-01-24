@@ -37,7 +37,7 @@ fileprivate enum KeyCode: UInt16 {
     case tab = 48
 }
 
-extension ShortcutAction.HotKeyDefinition.PrimaryKey {
+extension SSDocumentAction.HotKeyDefinition.PrimaryKey {
     internal static func from(event: NSEvent) -> Self? {
         // MARK: - DISPLAY KEYS -
         switch event.characters {
@@ -149,7 +149,7 @@ extension ShortcutAction.HotKeyDefinition.PrimaryKey {
     }
 }
 
-extension ShortcutAction.HotKeyDefinition.ModifierKey {
+extension SSDocumentAction.HotKeyDefinition.ModifierKey {
     public static func from(event: NSEvent) -> Set<Self> {
         var results: Set<Self> = []
         if event.modifierFlags.contains(.capsLock) {
@@ -171,7 +171,7 @@ extension ShortcutAction.HotKeyDefinition.ModifierKey {
     }
 }
 
-extension ShortcutAction.HotKeyDefinition {
+extension SSDocumentAction.HotKeyDefinition {
     public static func from(event: NSEvent) -> Self? {
         let modifiers = ModifierKey.from(event: event)
         guard let primaryKey = PrimaryKey.from(event: event) else { return nil }
