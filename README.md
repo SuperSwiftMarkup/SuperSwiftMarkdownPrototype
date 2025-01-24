@@ -38,6 +38,33 @@ After struggling with hacks and workarounds, it became clear that the root probl
 
 ---
 
+# Current Development Preview
+
+## Screenshots (as of 2025-1-23)
+
+If it hasn’t already been mentioned the current focus is read only rendering
+with text selection and general navigation—what users would expect from a text
+editor in read only mode.  
+
+![preview 1 light mode](screenshots/2025-1-23/preview-1-light-mode.png)
+
+![preview 2 dark mode](screenshots/2025-1-23/preview-2-dark-mode.png)
+
+**Debug Mode:**
+![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
+
+Typographic boundaries are denoted by the dotted border, blue is for the primary line while trailing wrapped lines are denoted by the dotted red border. 
+
+**Text Selection:**
+![text selection dark mode](screenshots/2025-1-23/text-selection-dark-mode.png)
+
+**Multiple text selections are supported but (as of 2025-1-23) everything is still in heavy development:**
+![text selection multi cursor light mode](screenshots/2025-1-23/text-selection-multi-cursor-light-mode.png)
+
+
+
+---
+
 # Appendix
 
 ## Meeting the expectations of iOS and macOS users
@@ -120,20 +147,3 @@ But in a context specific manner—by default—that ignores text in HTML tags, 
 
 - Automatic lazy loading of syntax highlighting code when available. 
 - Additional smart spell checking support for comments within code blocks.
-
-## Screenshots (as of 2025-1-23)
-
-### Basic
-![preview 1 light mode](screenshots/2025-1-23/preview-1-light-mode.png)
-
-![preview 2 dark mode](screenshots/2025-1-23/preview-2-dark-mode.png)
-
-### Debug Mode
-![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
-
-### Text Selection
-![text selection dark mode](screenshots/2025-1-23/text-selection-dark-mode.png)
-
-Multiple text selections are supported:
-![text selection multi cursor light mode](screenshots/2025-1-23/text-selection-multi-cursor-light-mode.png)
-
