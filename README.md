@@ -128,3 +128,6 @@ But in a context specific manner—by default—that ignores text in HTML tags, 
 
 ### MarkdownPreview Debug View
 ![MarkdownPreviewDebugView](screenshots/2025-1-23-markdown-preview-debug-view.png)
+
+### MarkdownPreview — Dark Mode
+![MarkdownPreview](screenshots/2025-1-23-markdown-preview-dark-mode.png)

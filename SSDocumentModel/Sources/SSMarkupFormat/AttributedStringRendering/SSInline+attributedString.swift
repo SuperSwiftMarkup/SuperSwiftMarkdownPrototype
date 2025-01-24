@@ -96,7 +96,7 @@ extension SSInline.InlineCodeNode {
 }
 extension SSInline.InlineHTMLNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
-        let foregroundColor = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
+        let foregroundColor = ThemeDefaults.Colors.Inline.inlineHTML
         let environment = environment
             .updateStyling {
                 $0  .with(fontDesign: .monospaced)
@@ -126,7 +126,6 @@ extension SSInline.SoftBreakNode {
 }
 extension SSInline.SymbolLinkNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
-//        let environment = environment.updateStyling { $0.with(backgroundColor: .red) }
         renderCodeVoice(context: &context, environment: environment, value: self.destination ?? "")
     }
 }
@@ -146,7 +145,7 @@ fileprivate func renderLink(
 ) {
     let linkColor = SSColorMap(
         light: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)},
-        dark: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)}
+        dark: {#colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)}
     )
     let tokenEnvironment = environment
         .updateStyling {
@@ -191,12 +190,21 @@ fileprivate func renderCodeVoice(
     environment: AttributeEnvironment,
     value: String
 ) {
+    let tokenEnvironment = environment
+        .updateStyling {
+            $0  .with(fontDesign: .monospaced)
+                .with(fontWeight: .light)
+                .with(foregroundColor: ThemeDefaults.Colors.Inline.inlineCodeTokenForeground)
+                .with(backgroundColor: ThemeDefaults.Colors.Inline.inlineCodeBackground)
+        }
     let environment = environment
         .updateStyling {
             $0  .with(fontDesign: .monospaced)
-                .with(backgroundColor: .gray.with(alpha: 0.2))
+                .with(fontWeight: .light)
+                .with(backgroundColor: ThemeDefaults.Colors.Inline.inlineCodeTextForeground)
+                .with(backgroundColor: ThemeDefaults.Colors.Inline.inlineCodeBackground)
         }
-    context.append(string: "`", environment: environment)
+    context.append(string: "`", environment: tokenEnvironment)
     context.append(string: value, environment: environment)
-    context.append(string: "`", environment: environment)
+    context.append(string: "`", environment: tokenEnvironment)
 }

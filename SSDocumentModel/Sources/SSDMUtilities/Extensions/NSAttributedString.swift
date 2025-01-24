@@ -24,7 +24,7 @@ extension NSAttributedString {
         public static let ignoreTrailingWhitespace = Self(rawValue: 1 << 2)
         public static let ignoreWhitespaceAtBothEnds: Self = [ Self.ignoreLeadingWhitespace, Self.ignoreTrailingWhitespace ]
     }
-    public func range(options: RangeOptions) -> NSRange {
+    public func range(options: RangeOptions) -> NSRange? {
         let startIndex = string
             .firstIndex { !$0.isWhitespace }
             .map {
@@ -33,13 +33,31 @@ extension NSAttributedString {
         let endIndex = string
             .lastIndex { !$0.isWhitespace }
             .map {
-                string.distance(from: $0, to: string.endIndex)
+                let result = string.distance(from: $0, to: string.endIndex)
+//                let result = $0.utf16Offset(in: string)
+                print("distance: \(result)")
+                return result
             }
         if options.contains(.ignoreLeadingWhitespace) && options.contains(.ignoreTrailingWhitespace) {
-            return NSRange(
-                location: startIndex ?? 0,
-                length: (endIndex ?? length) - (startIndex ?? 0)
+            let startIndex = startIndex ?? 0
+            let endIndex = endIndex ?? length
+            let length = endIndex - startIndex
+            let isValid = startIndex <= endIndex
+            let result = NSRange(
+                location: startIndex,
+                length: length
             )
+            print(
+                "result", result,
+                startIndex.description,
+                endIndex.description,
+                result.upperBound.description,
+                "isValid:\(isValid)"
+            )
+            if !isValid {
+                return nil
+            }
+            return result
         }
         if options.contains(.ignoreLeadingWhitespace) {
             return NSRange(location: startIndex ?? 0, length: length - (startIndex ?? 0))

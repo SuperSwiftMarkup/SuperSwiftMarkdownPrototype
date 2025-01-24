@@ -12,7 +12,7 @@
 - [ ] Open a pull request
 - [x] @mentions, #refs, [links](), **formatting**, and <del>tags</del> supported
 - [x] list syntax required (any unordered or ordered list supported)
-- [ ] this is a complete item
+- [ ] lorem ipsum `item-1` and a `item-2` item
 
 ## SubSection — Lorem Ipsum Dollar Sum Import
 1.  Item One
@@ -39,7 +39,9 @@
    - Mint
    - #### Some Item - Lorem Ipsum — Lorem Ipsum Dollar Sum Import
 
-# Block Quote
+# Block Quotes
+
+### Example 1
 
 > ## In Block Quote
 > > 4. Delta
@@ -49,10 +51,12 @@
 > >    - Cyan
 > > 5. Epsilon
 
-### SubSubSection
+### Example 2
 
 > # Hello World
-> Hello World
+> X
+> X Hello World X
+> X
 > ```
 > code
 > ```
@@ -63,6 +67,19 @@
 > > Hello World
 > 
 > Hello World
+
+### Example 3 
+
+> # Hello World
+> Line 1
+> Line 2
+> Line 3
+> Line 4
+> > Line 4.A
+> > Line 4.B
+> > Line 4.C
+> Line 5
+
 
 # Headers
 

@@ -13,8 +13,6 @@ struct MarkdownPreviewApp: App {
     var body: some Scene {
         WindowGroup {
             SSDocumentSampleView()
-                .preferredColorScheme(.light)
-                .environment(\.colorScheme, .light)
         }
     }
 }

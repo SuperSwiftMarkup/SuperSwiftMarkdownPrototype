@@ -41,12 +41,10 @@ extension SSBlock.BlockQuoteNode {
                 $0  .with(backgroundColor: .red.with(alpha: 0.25), updateType: .preferExisting)
             }
             .updateTypesetting {
-                $0  .extend(baseIndentationLevel: .quarter)
+                $0  .extend(baseIndentationLevel: .whole)
             }
-        for (index, child) in self.children.enumerated() {
-            let isLast = self.children.count == index + 1
+        for child in self.children {
             child.attributedString(context: &context, environment: environment)
-            let _ = isLast
         }
     }
 }
@@ -120,6 +118,9 @@ extension SSBlock.HeadingNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = level.environment(environment: environment)
             .with(blockScope: .heading)
+            .updateStyling {
+                $0  .with(foregroundColor: ThemeDefaults.Colors.Block.Header.textForeground)
+            }
             .updateTypesetting {
                 $0  .clearTrailingIndentationLevel()
             }
@@ -127,7 +128,7 @@ extension SSBlock.HeadingNode {
                 $0  .extend(trailingIndentationLevel: .whole)
             }
         let token = String(repeating: "#", count: Int(self.level.asUInt8))
-        let tokenColor = SSColorMap(light: #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
+        let tokenColor = ThemeDefaults.Colors.Block.Header.tokenForeground
         context.append(string: "\(token) ", environment: environment.updateStyling {
             $0  .with(foregroundColor: tokenColor)
                 .with(fontWeight: .light)
@@ -148,7 +149,7 @@ extension SSBlock.HTMLBlockNode {
                 $0  .with(fontDesign: .monospaced)
                     .with(fontWeight: .light)
                     .mapFontSize { $0 * 0.8 }
-                    .with(foregroundColor: codeOrMarkupForegroundColor)
+                    .with(foregroundColor: ThemeDefaults.Colors.Block.htmlBlock)
             }
         context.append(string: self.value, environment: environment)
         context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
@@ -162,7 +163,7 @@ extension SSBlock.CodeBlockNode {
                 $0  .with(fontDesign: .monospaced)
                     .with(fontWeight: .light)
                     .mapFontSize { $0 * 0.8 }
-                    .with(foregroundColor: codeOrMarkupForegroundColor)
+                    .with(foregroundColor: ThemeDefaults.Colors.Block.codeBlock)
             }
         context.append(string: "```", environment: environment)
         context.append(lineBreak: .hardLineBreak, environment: environment)
@@ -183,7 +184,7 @@ extension SSBlock.ThematicBreakNode {
     }
 }
 
-fileprivate let codeOrMarkupForegroundColor: SSColorMap = .init(singleton: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
+//fileprivate let codeOrMarkupForegroundColor: SSColorMap = SSColorMap(singleton: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
 
 // MARK: - INTERNAL HELPERS -
 

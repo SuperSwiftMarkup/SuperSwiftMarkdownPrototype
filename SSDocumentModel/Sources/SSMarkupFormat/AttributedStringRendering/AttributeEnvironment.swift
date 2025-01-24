@@ -11,7 +11,7 @@ import SSDMUtilities
 internal final class AttributeEnvironment {
     fileprivate let styleEnvironment: StyleEnvironment
     fileprivate let typesetEnvironment: TypesetEnvironment
-    fileprivate let blockScopes: [ SSBlockType ]
+    internal    let blockScopes: [ SSBlockType ]
     fileprivate init(
         styleEnvironment: StyleEnvironment,
         typesetEnvironment: TypesetEnvironment,
@@ -192,6 +192,8 @@ extension AttributeEnvironment.StyleEnvironment {
         if let foregroundColor = foregroundColor {
             let color: XColor = foregroundColor.adaptiveColor
             attributes[.foregroundColor] = color
+        } else {
+            attributes[.foregroundColor] = ThemeDefaults.Colors.Block.htmlBlock.adaptiveColor
         }
         if let backgroundColor = backgroundColor {
             let color: XColor = backgroundColor.adaptiveColor
@@ -289,6 +291,7 @@ extension AttributeEnvironment.TypesetEnvironment {
         }
         paragraphStyle.firstLineHeadIndent = baseIndentation
         paragraphStyle.headIndent = baseIndentation + trailingIndentation
+        paragraphStyle.lineSpacing = 8
         attributes[.paragraphStyle] = paragraphStyle
         return attributes
     }

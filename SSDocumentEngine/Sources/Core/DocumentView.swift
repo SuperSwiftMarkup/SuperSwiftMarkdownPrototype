@@ -10,6 +10,7 @@ import AppKit
 #elseif os(iOS) || os(visionOS)
 import UIKit
 #endif
+import SSDMUtilities
 
 internal final class DocumentView: NSView {
     var textLayoutManager: NSTextLayoutManager? {
@@ -42,10 +43,22 @@ internal final class DocumentView: NSView {
     var padding: CGFloat = 5.0
     
     // Colors support.
-    var selectionColor: NSColor { .systemBlue.withAlphaComponent(0.2) }
+    var selectionColor: NSColor {
+        SSColorMap(
+            light: {
+                .systemBlue.withAlphaComponent(0.2)
+            },
+            dark: {
+                .systemBlue.withAlphaComponent(0.5)
+            }
+        )
+        .adaptiveColor
+    }
     var caretColor: NSColor { .systemBlue }
     
     var boundsDidChangeObserver: Any? = nil
+    
+    var appliedColorScheme: SSColorSchemeMode? = nil
     
     override init(frame: CGRect) {
         print("INIT: FRAME")

@@ -22,6 +22,7 @@ extension DocumentContext {
         currentBlock.append(segment)
     }
     internal mutating func append(lineBreak: LineBreakType, environment: AttributeEnvironment) {
+        let isEmpty = self.currentBlock.string.isEmpty
         switch lineBreak {
         case .softLineBreak:
             append(string: "\n", environment: environment)
@@ -39,9 +40,10 @@ extension DocumentContext {
         currentBlock = paragraphState.finalize(environment: environment, preceeding: currentBlock)
     }
     private mutating func applyTypesettingEnvironment(environment: AttributeEnvironment) {
-        let range = currentBlock.range(options: .ignoreWhitespaceAtBothEnds)
         let attributes = environment.systemAttributeDictionary(forEnvironment: .typesetting)
-        currentBlock.addAttributes(attributes, range: range)
+        currentBlock.range(options: .ignoreWhitespaceAtBothEnds).map {
+            currentBlock.addAttributes(attributes, range: $0)
+        }
     }
     internal mutating func endBlock(lineBreak: LineBreakType?, environment: AttributeEnvironment, typesetBlock: Bool) {
         if let lineBreak = lineBreak {
@@ -51,6 +53,7 @@ extension DocumentContext {
             applyTypesettingEnvironment(environment: environment)
         }
         if !currentBlock.string.isEmpty {
+            currentBlock.annotate(blockScopes: environment.blockScopes)
             buffer.append(currentBlock)
         }
         currentBlock = NSMutableAttributedString()

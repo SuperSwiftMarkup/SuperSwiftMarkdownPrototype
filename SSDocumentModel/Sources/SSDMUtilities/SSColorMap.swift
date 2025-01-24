@@ -54,7 +54,7 @@ extension SSColorMap {
 }
 
 extension SSColorMap {
-    public static let textDefault: Self = Self(light: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), dark: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
+    public static let textColor: Self = Self(light: XColor.textColor, dark: XColor.textColor)
     public static let red: Self = Self(light: .systemRed, dark: .systemRed)
     public static let green: Self = Self(light: .systemGreen, dark: .systemGreen)
     public static let blue: Self = Self(light: .systemBlue, dark: .systemBlue)
@@ -70,6 +70,7 @@ extension SSColorMap {
     public static let cyan: Self = Self(light: .systemCyan, dark: .systemCyan)
     public static let clear: Self = Self(light: XColor.clear, dark: XColor.clear)
     public static let unnoticeable: Self = Self(light: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.01), dark: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.01235708773))
+    public static let `default`: Self = Self(light: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), dark: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
     public static var random: Self {
         let colors = [
             red,

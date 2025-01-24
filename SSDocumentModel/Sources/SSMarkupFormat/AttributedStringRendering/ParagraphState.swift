@@ -44,7 +44,9 @@ extension ParagraphState {
             .systemAttributeDictionary(forEnvironment: .typesetting)
         // - -
         output.beginEditing()
-        output.addAttributes(baseAttributes, range: output.range(options: .ignoreWhitespaceAtBothEnds))
+        output.range(options: .ignoreWhitespaceAtBothEnds).map {
+            output.addAttributes(baseAttributes, range: $0)
+        }
         for (index, line) in lines.enumerated() {
             let line = NSMutableAttributedString(attributedString: line)
             let isLast = index + 1 == lines.count

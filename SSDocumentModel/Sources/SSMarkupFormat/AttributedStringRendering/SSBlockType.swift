@@ -27,7 +27,7 @@ extension NSAttributedString.Key {
 }
 
 extension NSMutableAttributedString {
-    internal func set(blockScopes: [SSBlockType]) {
+    internal func annotate(blockScopes: [SSBlockType]) {
         addAttribute(.blockScopes, value: blockScopes, range: self.range)
     }
 }
