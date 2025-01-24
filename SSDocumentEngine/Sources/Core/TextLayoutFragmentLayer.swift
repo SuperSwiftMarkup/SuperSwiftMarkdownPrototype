@@ -13,6 +13,8 @@ import AppKit
 import UIKit
 #endif
 
+fileprivate let FULL_DEBUG_MODE: Bool = false
+
 internal class TextLayoutFragmentLayer: CALayer {
     var parent: DocumentView?
     var layoutFragment: NSTextLayoutFragment!
@@ -176,7 +178,6 @@ internal class TextLayoutFragmentLayer: CALayer {
             context.fill([rect])
             context.restoreGState()
         }
-//        layoutFragment.draw(at: .zero, in: context)
         layoutFragment.draw(
             at: .init(
                 x: layoutFragment.layoutFragmentFrame.origin.x + padding,
@@ -186,6 +187,7 @@ internal class TextLayoutFragmentLayer: CALayer {
         )
     }
     private func drawBackgroundDebug(context: CGContext) {
+        guard FULL_DEBUG_MODE else { return }
         let colors: [NSColor] = [
             NSColor.systemRed,
             NSColor.systemGreen,
@@ -235,21 +237,17 @@ internal class TextLayoutFragmentLayer: CALayer {
         context.restoreGState()
     }
     private func drawForegroundDebug(context: CGContext) {
-        context.saveGState()
-//        let isBlockQuote = (layoutFragment.textElement as? NSTextParagraph)?.attributedString.isOfType(markdownBlockType: .blockQuote) == true
-//        if isBlockQuote {
-//            context.setFillColor(NSColor.green.withAlphaComponent(0.8).cgColor)
-//        } else {
-//            context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
-//        }
-        context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
-        let circle = CGPath.init(
-            ellipseIn: CGRect(x: 0, y: (bounds.maxY*0.5) - 3, width: 6, height: 6),
-            transform: nil
-        )
-        context.addPath(circle)
-        context.fillPath()
-        context.restoreGState()
+        if FULL_DEBUG_MODE {
+            context.saveGState()
+            context.setFillColor(NSColor.red.withAlphaComponent(0.8).cgColor)
+            let circle = CGPath.init(
+                ellipseIn: CGRect(x: 0, y: (bounds.maxY*0.5) - 3, width: 6, height: 6),
+                transform: nil
+            )
+            context.addPath(circle)
+            context.fillPath()
+            context.restoreGState()
+        }
 
 //        // LAYOUT FRAMES DEBUG
 //        if showLayerFrames {

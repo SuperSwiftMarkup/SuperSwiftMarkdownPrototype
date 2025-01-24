@@ -91,15 +91,19 @@ extension SSInline.StrongNode {
 }
 extension SSInline.InlineCodeNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
-        let environment = environment.updateStyling { $0.with(fontDesign: .monospaced) }
-        context.append(string: "`", environment: environment)
-        context.append(string: value, environment: environment)
-        context.append(string: "`", environment: environment)
+        renderCodeVoice(context: &context, environment: environment, value: value)
     }
 }
 extension SSInline.InlineHTMLNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
-        renderCodeVoice(context: &context, environment: environment, value: value)
+        let foregroundColor = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1))
+        let environment = environment
+            .updateStyling {
+                $0  .with(fontDesign: .monospaced)
+                    .with(fontWeight: .light)
+                    .with(foregroundColor: foregroundColor)
+            }
+        context.append(string: value, environment: environment)
     }
 }
 extension SSInline.LineBreakNode {
@@ -122,6 +126,7 @@ extension SSInline.SoftBreakNode {
 }
 extension SSInline.SymbolLinkNode {
     fileprivate func attributedString(context: inout ParagraphState, environment: AttributeEnvironment) {
+//        let environment = environment.updateStyling { $0.with(backgroundColor: .red) }
         renderCodeVoice(context: &context, environment: environment, value: self.destination ?? "")
     }
 }
@@ -139,38 +144,46 @@ fileprivate func renderLink(
     destination: String?,
     title: String?
 ) {
-    let tokenEnvironment = environment.updateStyling {
-        $0  .with(fontWeight: .light)
-    }
+    let linkColor = SSColorMap(
+        light: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)},
+        dark: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)}
+    )
+    let tokenEnvironment = environment
+        .updateStyling {
+            $0  .with(fontWeight: .light)
+        }
     let linkEnvironment = environment.updateStyling {
         $0  .with(fontWeight: .light)
 //            .with(fontDesign: .monospaced)
             .mapFontSize { $0 * 0.9 }
             .with(fontDesign: .default)
-            .with(foregroundColor: SSColorMap(
-                light: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)},
-                dark: {#colorLiteral(red: 0, green: 0.4035420405, blue: 1, alpha: 1)}
-            ))
+            .with(foregroundColor: linkColor)
             .with(fontWidth: .condensed)
     }
+    let childEnvironment = environment
+        .updateStyling(ifTrue: destination == nil) {
+            $0  .with(foregroundColor: linkColor)
+        }
     if let children = children {
-        context.append(string: "[", environment: tokenEnvironment)
+        context.append(string: "[", environment: childEnvironment)
         for child in children {
-            child.attributedString(context: &context, environment: environment)
+            child.attributedString(context: &context, environment: childEnvironment)
         }
-        context.append(string: "]", environment: tokenEnvironment)
+        context.append(string: "]", environment: childEnvironment)
     }
-    context.append(string: "(", environment: tokenEnvironment)
-    if let destination = destination {
-        context.append(string: destination, environment: linkEnvironment)
-    }
-    if let title = title {
-        if destination != nil {
-            context.append(string: " ", environment: linkEnvironment)
+    if destination != nil && title != nil {
+        context.append(string: "(", environment: tokenEnvironment)
+        if let destination = destination {
+            context.append(string: destination, environment: linkEnvironment)
         }
-        context.append(string: "\"\(title)\"", environment: environment)
+        if let title = title {
+            if destination != nil {
+                context.append(string: " ", environment: linkEnvironment)
+            }
+            context.append(string: "\"\(title)\"", environment: environment)
+        }
+        context.append(string: ")", environment: tokenEnvironment)
     }
-    context.append(string: ")", environment: tokenEnvironment)
 }
 
 fileprivate func renderCodeVoice(
@@ -178,6 +191,11 @@ fileprivate func renderCodeVoice(
     environment: AttributeEnvironment,
     value: String
 ) {
+    let environment = environment
+        .updateStyling {
+            $0  .with(fontDesign: .monospaced)
+                .with(backgroundColor: .gray.with(alpha: 0.2))
+        }
     context.append(string: "`", environment: environment)
     context.append(string: value, environment: environment)
     context.append(string: "`", environment: environment)
