@@ -53,14 +53,15 @@ editor in read only mode.
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
 
-Typographic boundaries are denoted by the dotted border, blue is for the primary line while trailing wrapped lines are denoted by the dotted red border. 
+Typographic boundaries are denoted by the dotted borders as shown in the above.
+Blue outlines denote primary lines while the trailing wrapped lines are denoted
+by dotted red borders. 
 
 **Text Selection:**
 ![text selection dark mode](screenshots/2025-1-23/text-selection-dark-mode.png)
 
 **Multiple text selections are supported but (as of 2025-1-23) everything is still in heavy development:**
 ![text selection multi cursor light mode](screenshots/2025-1-23/text-selection-multi-cursor-light-mode.png)
-
 
 
 ---
