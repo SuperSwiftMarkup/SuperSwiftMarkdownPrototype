@@ -72,14 +72,6 @@ extension TextLayoutFragmentLayer {
         for scope in scopes ?? [] {
             drawScopeBackground(context: context, scope: scope, scopeDrawInfo: &scopeDrawInfo)
         }
-        if scopeDrawInfo.drawFrameBackground {
-//            let fillColor = SSColorMap( light: #colorLiteral(red: 0.7986731021, green: 0.8121947767, blue: 0.8439902169, alpha: 0.9970813141), dark: #colorLiteral(red: 0.3476208146, green: 0.3476208146, blue: 0.3476208146, alpha: 0.5048139327) )
-            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9677360897, green: 0.9677360897, blue: 0.9677360897, alpha: 0.9970813141), dark: #colorLiteral(red: 0.1407243465, green: 0.147121262, blue: 0.1621632409, alpha: 1) )
-            context.saveGState()
-            context.setFillColor(fillColor.adaptiveColor.cgColor)
-            context.fill([bounds])
-            context.restoreGState()
-        }
 //        let drawLeadingBorder = scopeDrawInfo.indentLevels.first { $0.drawGraphic == true } != nil
 //        if drawLeadingBorder {
 //            let offsetX = layoutFragment.layoutFragmentFrame.origin.x + padding
@@ -100,22 +92,7 @@ extension TextLayoutFragmentLayer {
 //            context.fill([frame])
 //            context.restoreGState()
 //        }
-        for (index, _) in scopeDrawInfo.indentLevels.enumerated() {
-            let offsetX = CGFloat(index * 20)
-            let fillColor = SSColorMap( light: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1), dark: #colorLiteral(red: 0.2832325416, green: 0.3345693074, blue: 0.4552847595, alpha: 1) )
-            let beginX = 15 + offsetX
-            let frame = CGRect(
-                origin: .init(
-                    x: beginX,
-                    y: self.bounds.origin.y
-                ),
-                size: .init(width: 5, height: self.bounds.height)
-            )
-            context.saveGState()
-            context.setFillColor(fillColor.adaptiveColor.cgColor)
-            context.fill([frame])
-            context.restoreGState()
-        }
+        renderScopeDrawInfo(context: context, scopeDrawInfo: scopeDrawInfo)
         if !scopeDrawInfo.skipDrawLayoutFragment {
             layoutFragment.draw(
                 at: .init(
@@ -152,6 +129,31 @@ extension TextLayoutFragmentLayer {
             drawThematicBreak(context: context)
             scopeDrawInfo.skipDrawLayoutFragment = true
         case .listItem: ()
+        }
+    }
+    private func renderScopeDrawInfo(context: CGContext, scopeDrawInfo: borrowing ScopeDrawInfo) {
+        if scopeDrawInfo.drawFrameBackground {
+            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9677360897, green: 0.9677360897, blue: 0.9677360897, alpha: 0.9970813141), dark: #colorLiteral(red: 0.1407243465, green: 0.147121262, blue: 0.1621632409, alpha: 1) )
+            context.saveGState()
+            context.setFillColor(fillColor.adaptiveColor.cgColor)
+            context.fill([bounds])
+            context.restoreGState()
+        }
+        for (index, _) in scopeDrawInfo.indentLevels.enumerated() {
+            let offsetX = CGFloat(index * 20)
+            let fillColor = SSColorMap( light: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1), dark: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.7517339533) )
+            let beginX = 15 + offsetX
+            let frame = CGRect(
+                origin: .init(
+                    x: beginX,
+                    y: self.bounds.origin.y
+                ),
+                size: .init(width: 5, height: self.bounds.height)
+            )
+            context.saveGState()
+            context.setFillColor(fillColor.adaptiveColor.cgColor)
+            context.fill([frame])
+            context.restoreGState()
         }
     }
     private func drawThematicBreak(context: CGContext) {
