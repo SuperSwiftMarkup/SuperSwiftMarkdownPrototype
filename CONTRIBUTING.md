@@ -1,5 +1,3 @@
-#  <#Title#>
-
 # Contributing to the SuperSwiftMarkup Projects
 
 Thank you for your interest in contributing to the SuperSwiftMarkup projects! Contributions are welcome and greatly appreciated. By contributing, you help make this project even better.
