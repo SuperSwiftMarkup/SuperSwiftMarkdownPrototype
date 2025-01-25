@@ -235,17 +235,22 @@ extension SSBlock.ListItemNode {
         environment: AttributeEnvironment,
         itemType: SSBlock.ListItemNode.ListItemType
     ) {
-        let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1), dark: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1) )
+        let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1), dark: #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1) )
         let taskListEnvironment = environment
             .updateStyling {
                 $0  .with(foregroundColor: foregroundColor)
                     .mapFontSize { $0 * 1.25 }
             }
-        let checkedBox = "☑"
+//        let checkedBox = "☑"
+        let checkCircle = "✓⃝⃝"
+//        let checkCircle = "✔️⃝⃝"
 //        let uncheckedBox = "☐"
-        let uncheckedCircle = "❍"
+//        let uncheckedCircle = "❍"
+//        let uncheckedCircle = "◯"
+//        let uncheckedCircle = "○"
+        let uncheckedCircle = " ⃝⃝"
         let unchecked = uncheckedCircle
-        let checked = checkedBox
+        let checked = checkCircle
         let space = "\u{2008}"
         let bullet = "•"
         let dash = "—"
