@@ -74,7 +74,7 @@ extension TextLayoutFragmentLayer {
         }
         if scopeDrawInfo.drawFrameBackground {
 //            let fillColor = SSColorMap( light: #colorLiteral(red: 0.7986731021, green: 0.8121947767, blue: 0.8439902169, alpha: 0.9970813141), dark: #colorLiteral(red: 0.3476208146, green: 0.3476208146, blue: 0.3476208146, alpha: 0.5048139327) )
-            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9677360897, green: 0.9677360897, blue: 0.9677360897, alpha: 0.9970813141), dark: #colorLiteral(red: 0.3476208146, green: 0.3476208146, blue: 0.3476208146, alpha: 0.5048139327) )
+            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9677360897, green: 0.9677360897, blue: 0.9677360897, alpha: 0.9970813141), dark: #colorLiteral(red: 0.1407243465, green: 0.147121262, blue: 0.1621632409, alpha: 1) )
             context.saveGState()
             context.setFillColor(fillColor.adaptiveColor.cgColor)
             context.fill([bounds])
@@ -102,7 +102,7 @@ extension TextLayoutFragmentLayer {
 //        }
         for (index, _) in scopeDrawInfo.indentLevels.enumerated() {
             let offsetX = CGFloat(index * 20)
-            let fillColor = SSColorMap( light: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1), dark: #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1) )
+            let fillColor = SSColorMap( light: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1), dark: #colorLiteral(red: 0.2832325416, green: 0.3345693074, blue: 0.4552847595, alpha: 1) )
             let beginX = 15 + offsetX
             let frame = CGRect(
                 origin: .init(
@@ -155,7 +155,7 @@ extension TextLayoutFragmentLayer {
         }
     }
     private func drawThematicBreak(context: CGContext) {
-        let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 0.7552321862), dark: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1) )
+        let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 0.7552321862), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1) )
         context.saveGState()
         context.setFillColor(foregroundColor.adaptiveColor.cgColor)
         let rect = CGRect(

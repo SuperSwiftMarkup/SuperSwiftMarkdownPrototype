@@ -235,6 +235,12 @@ extension SSBlock.ListItemNode {
         environment: AttributeEnvironment,
         itemType: SSBlock.ListItemNode.ListItemType
     ) {
+        let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1), dark: #colorLiteral(red: 0.9686274529, green: 0.78039217, blue: 0.3450980484, alpha: 1) )
+        let taskListEnvironment = environment
+            .updateStyling {
+                $0  .with(foregroundColor: foregroundColor)
+                    .mapFontSize { $0 * 1.25 }
+            }
         let checkedBox = "☑"
 //        let uncheckedBox = "☐"
         let uncheckedCircle = "❍"
@@ -244,22 +250,57 @@ extension SSBlock.ListItemNode {
         let bullet = "•"
         let dash = "—"
         let unorderedListItem = bullet
-        let token: String
         switch (itemType, self.checkbox) {
         case (.ordered(let count), .some(.unchecked)):
-            token = "\(count)․\(space)\(unchecked)\(space)"
+            context.append(string: "\(count)․\(space)", environment: environment)
+            context.append(string: "\(unchecked)\(space)", environment: taskListEnvironment)
         case (.ordered(let count), .some(.checked)):
-            token = "\(count)․\(space)\(checked)\(space)"
+            context.append(string: "\(count)․\(space)", environment: environment)
+            context.append(string: "\(checked)\(space)", environment: taskListEnvironment)
         case (.unordered, .some(.unchecked)):
-            token = "\(dash)\(space)\(unchecked)\(space)"
+            context.append(string: "\(dash)\(space)", environment: environment)
+            context.append(string: "\(unchecked)\(space)", environment: taskListEnvironment)
         case (.unordered, .some(.checked)):
-            token = "\(dash)\(space)\(checked)\(space)"
+            context.append(string: "\(dash)\(space)", environment: environment)
+            context.append(string: "\(checked)\(space)", environment: taskListEnvironment)
         case (.ordered(let count), .none):
-            token = "\(count)․\(space)"
+            context.append(string: "\(count)․\(space)", environment: environment)
         case (.unordered, .none):
-            token = "\(unorderedListItem)\(space)"
+            context.append(string: "\(unorderedListItem)\(space)", environment: environment)
         }
-        context.append(string: token, environment: environment)
+        
+//        switch (itemType, self.checkbox) {
+//        case (.ordered(let count), .some(.unchecked)):
+//            context.append(string: "\(count)․\(space)", environment: environment)
+//            environment = environment
+//                .updateStyling {
+//                    $0.with(foregroundColor: foregroundColor)
+//                }
+//            context.append(string: "\(unchecked)\(space)", environment: environment)
+//        case (.ordered(let count), .some(.checked)):
+//            context.append(string: "\(count)․\(space)", environment: environment)
+//            environment = environment.updateStyling { $0.with(foregroundColor: foregroundColor)
+//            context.append(string: "\(checked)\(space)", environment: environment)
+//        case (.unordered, .some(.unchecked)):
+//            context.append(string: "\(dash)\(space)", environment: environment)
+//            environment = environment
+//                .updateStyling {
+//                    $0.with(foregroundColor: foregroundColor)
+//                }
+//            context.append(string: "\(unchecked)\(space)", environment: environment)
+//        case (.unordered, .some(.checked)):
+//            context.append(string: "\(dash)\(space)\(checked)\(space)", environment: environment)
+//            environment = environment
+//                .updateStyling {
+//                    $0.with(foregroundColor: foregroundColor)
+//                }
+//        case (.ordered(let count), .none):
+//            context.append(string: "\(count)․\(space)", environment: environment)
+//        case (.unordered, .none):
+//            context.append(string: "\(unorderedListItem)\(space)", environment: environment)
+//        }
+//        }
+        
     }
 }
 
