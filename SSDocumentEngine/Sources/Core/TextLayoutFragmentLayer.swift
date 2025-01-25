@@ -107,7 +107,7 @@ extension TextLayoutFragmentLayer {
         switch scope {
         case .blockQuote:
             scopeDrawInfo.indentLevels.append(.init(drawGraphic: true))
-            scopeDrawInfo.drawFrameBackground = true
+//            scopeDrawInfo.drawFrameBackground = true
         case .orderedList:
 //            scopeDrawInfo.indentLevels.append(.init(drawGraphic: false))
             ()
@@ -141,7 +141,7 @@ extension TextLayoutFragmentLayer {
         }
         for (index, _) in scopeDrawInfo.indentLevels.enumerated() {
             let offsetX = CGFloat(index * 20)
-            let fillColor = SSColorMap( light: #colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1), dark: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.7517339533) )
+            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.7528616209), dark: #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 0.7517339533) )
             let beginX = 15 + offsetX
             let frame = CGRect(
                 origin: .init(

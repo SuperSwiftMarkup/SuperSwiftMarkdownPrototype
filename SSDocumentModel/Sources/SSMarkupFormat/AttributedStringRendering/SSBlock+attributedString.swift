@@ -235,10 +235,27 @@ extension SSBlock.ListItemNode {
         environment: AttributeEnvironment,
         itemType: SSBlock.ListItemNode.ListItemType
     ) {
-        let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.9411764741, green: 0.4980392158, blue: 0.3529411852, alpha: 1), dark: #colorLiteral(red: 0.9607843161, green: 0.7058823705, blue: 0.200000003, alpha: 1) )
+        let beginTokenForegroundColor = SSColorMap( light: #colorLiteral(red: 0.4953680852, green: 0.4953680852, blue: 0.4953680852, alpha: 1), dark: #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1) )
+        let deemphasizedTokenForegroundColor = SSColorMap( light: #colorLiteral(red: 0.4953680852, green: 0.4953680852, blue: 0.4953680852, alpha: 1), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1) )
+        let checkedForegroundColor = SSColorMap( light: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1), dark: #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1) )
+        let uncheckedForegroundColor = SSColorMap( light: #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1), dark: #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1) )
+        let targetForegroundColor: SSColorMap?
+        switch self.checkbox {
+        case .checked: targetForegroundColor = checkedForegroundColor
+        case .unchecked: targetForegroundColor = uncheckedForegroundColor
+        default: targetForegroundColor = nil
+        }
+        let beginTokenEnvironment = environment
+            .updateStyling {
+                $0  .with(foregroundColor: beginTokenForegroundColor)
+            }
+        let deemphasizedTokenEnvironment = environment
+            .updateStyling {
+                $0  .with(foregroundColor: deemphasizedTokenForegroundColor)
+            }
         let taskListEnvironment = environment
             .updateStyling {
-                $0  .with(foregroundColor: foregroundColor)
+                $0  .with(foregroundColor: targetForegroundColor)
                     .mapFontSize { $0 * 1.25 }
             }
 //        let checkedBox = "☑"
@@ -257,55 +274,22 @@ extension SSBlock.ListItemNode {
         let unorderedListItem = bullet
         switch (itemType, self.checkbox) {
         case (.ordered(let count), .some(.unchecked)):
-            context.append(string: "\(count)․\(space)", environment: environment)
+            context.append(string: "\(count)․\(space)", environment: beginTokenEnvironment)
             context.append(string: "\(unchecked)\(space)", environment: taskListEnvironment)
         case (.ordered(let count), .some(.checked)):
-            context.append(string: "\(count)․\(space)", environment: environment)
+            context.append(string: "\(count)․\(space)", environment: beginTokenEnvironment)
             context.append(string: "\(checked)\(space)", environment: taskListEnvironment)
         case (.unordered, .some(.unchecked)):
-            context.append(string: "\(dash)\(space)", environment: environment)
+            context.append(string: "\(dash)\(space)", environment: deemphasizedTokenEnvironment)
             context.append(string: "\(unchecked)\(space)", environment: taskListEnvironment)
         case (.unordered, .some(.checked)):
-            context.append(string: "\(dash)\(space)", environment: environment)
+            context.append(string: "\(dash)\(space)", environment: deemphasizedTokenEnvironment)
             context.append(string: "\(checked)\(space)", environment: taskListEnvironment)
         case (.ordered(let count), .none):
-            context.append(string: "\(count)․\(space)", environment: environment)
+            context.append(string: "\(count)․\(space)", environment: beginTokenEnvironment)
         case (.unordered, .none):
-            context.append(string: "\(unorderedListItem)\(space)", environment: environment)
-        }
-        
-//        switch (itemType, self.checkbox) {
-//        case (.ordered(let count), .some(.unchecked)):
-//            context.append(string: "\(count)․\(space)", environment: environment)
-//            environment = environment
-//                .updateStyling {
-//                    $0.with(foregroundColor: foregroundColor)
-//                }
-//            context.append(string: "\(unchecked)\(space)", environment: environment)
-//        case (.ordered(let count), .some(.checked)):
-//            context.append(string: "\(count)․\(space)", environment: environment)
-//            environment = environment.updateStyling { $0.with(foregroundColor: foregroundColor)
-//            context.append(string: "\(checked)\(space)", environment: environment)
-//        case (.unordered, .some(.unchecked)):
-//            context.append(string: "\(dash)\(space)", environment: environment)
-//            environment = environment
-//                .updateStyling {
-//                    $0.with(foregroundColor: foregroundColor)
-//                }
-//            context.append(string: "\(unchecked)\(space)", environment: environment)
-//        case (.unordered, .some(.checked)):
-//            context.append(string: "\(dash)\(space)\(checked)\(space)", environment: environment)
-//            environment = environment
-//                .updateStyling {
-//                    $0.with(foregroundColor: foregroundColor)
-//                }
-//        case (.ordered(let count), .none):
-//            context.append(string: "\(count)․\(space)", environment: environment)
-//        case (.unordered, .none):
-//            context.append(string: "\(unorderedListItem)\(space)", environment: environment)
-//        }
-//        }
-        
+            context.append(string: "\(unorderedListItem)\(space)", environment: beginTokenEnvironment)
+        }        
     }
 }
 
