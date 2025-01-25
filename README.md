@@ -40,23 +40,20 @@ After struggling with hacks and workarounds, it became clear that the root probl
 
 # Current Development Preview
 
-## Screenshots (as of 2025-1-24)
+## Screenshots (as of 2025-1-24 at 9:30 PM)
 
 If it hasn’t already been mentioned the current focus is read only rendering
 with text selection and general navigation—what users would expect from a text
 editor in read only mode.  
 
-![preview 1 light mode](screenshots/2025-1-23/preview-1-light-mode.png)
-
-![preview 2 dark mode](screenshots/2025-1-23/preview-2-dark-mode.png)
-
-![preview 3 light mode](screenshots/2025-1-24/preview-3-light-mode.png)
-
-![preview 4 dark mode](screenshots/2025-1-24/preview-4-dark-mode.png)
-
-![blockquote preview 1 light mode](screenshots/2025-1-24/preview-blockquote-1-light-mode.png)
-
-![blockquote preview 2 dark mode](screenshots/2025-1-24/preview-blockquote-2-light-mode.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-1.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-2.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-3.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-4.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-5.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-6.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-7.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-8.png)
 
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
