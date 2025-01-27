@@ -54,7 +54,13 @@ editor in read only mode.
 ![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-6.png)
 ![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-7.png)
 ![blockquote preview 2 dark mode](screenshots/2025-1-24-night/screenshot-8.png)
+
+### Supports Freakin Markdown Tables!
+
 ![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-preview.png)
+
+**With full text selection support:**
+![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-selection-preview.png)
 
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
