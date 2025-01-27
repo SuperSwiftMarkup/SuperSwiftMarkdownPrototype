@@ -37,6 +37,12 @@ extension DocumentContext {
     ) {
         currentBlock = paragraphState.finalize(environment: environment, initial: currentBlock)
     }
+    internal mutating func push(
+        tableContext: consuming TableContext,
+        environment: AttributeEnvironment
+    ) {
+        currentBlock = tableContext.finalize(environment: environment)
+    }
     private mutating func applyTypesettingEnvironment(
         environment: AttributeEnvironment,
         typesetRange: NSAttributedString.RangeOptions

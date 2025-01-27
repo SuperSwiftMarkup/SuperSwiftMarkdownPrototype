@@ -95,11 +95,15 @@ extension SSBlock.TableNode {
     fileprivate func attributedString(context: inout DocumentContext, environment: AttributeEnvironment) {
         let environment = environment
             .with(blockScope: .table)
-            .updateStyling {
-                $0.with(fontDesign: .monospaced)
-            }
-        context.append(string: "<<TABLE>>", environment: environment)
-        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: true)
+//            .updateStyling {
+////                $0  .mapForegroundColor { $0.inversed }
+//                $0.with(colorMode: .darkModeOnly)
+//            }
+        var tableContext = TableContext(alignments: self.alignments, rows: [])
+        head.attributedString(tableContext: &tableContext, environment: environment)
+        body.attributedString(tableContext: &tableContext, environment: environment)
+        context.push(tableContext: tableContext, environment: environment)
+        context.endBlock(lineBreak: .hardLineBreak, environment: environment, typesetBlock: false)
     }
 }
 extension SSBlock.ParagraphNode {
@@ -333,5 +337,42 @@ extension SSBlock.HeadingNode.Level {
                     .with(fontWeight: .thin)
             }
         }
+    }
+}
+
+extension SSBlock.TableNode.Head {
+    fileprivate func attributedString(tableContext: inout TableContext, environment: AttributeEnvironment) {
+        let environment = environment
+            .updateStyling {
+                $0.mapFontWeight { $0.increment.increment }
+            }
+        row.attributedString(tableContext: &tableContext, environment: environment)
+    }
+}
+
+extension SSBlock.TableNode.Body {
+    fileprivate func attributedString(tableContext: inout TableContext, environment: AttributeEnvironment) {
+        for row in rows {
+            row.attributedString(tableContext: &tableContext, environment: environment)
+        }
+    }
+}
+
+extension SSBlock.TableNode.Row {
+    fileprivate func attributedString(tableContext: inout TableContext, environment: AttributeEnvironment) {
+        let cells = self.cells
+            .map { TableContext.Cell(attributedString: $0.attributedString(environment: environment)) }
+//            .with(append: TableContext.Cell(attributedString: NSAttributedString()))
+        tableContext.append(row: .init(cells: cells))
+    }
+}
+
+extension SSBlock.TableNode.Cell {
+    fileprivate func attributedString(environment: AttributeEnvironment) -> NSAttributedString {
+        var context = ParagraphState()
+        for child in self.children {
+            child.attributedString(context: &context, environment: environment)
+        }
+        return context.untypedFinalize(lineBreakSeparator: environment.styledSpace)
     }
 }

@@ -19,6 +19,7 @@ extension ThemeDefaults {
 }
 
 extension ThemeDefaults.Colors {
+    public static let defaultTextForegroundColor: SSColorMap = SSColorMap.textColor
     public struct Block {
         fileprivate static let codeOrMarkup: SSColorMap = SSColorMap(light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), dark: #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1))
         public static let blockQuote: SSColorMap = Self.codeOrMarkup

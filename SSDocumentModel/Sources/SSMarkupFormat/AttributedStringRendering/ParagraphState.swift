@@ -10,6 +10,9 @@ import Foundation
 internal struct ParagraphState: ~Copyable {
     private var lines: [NSAttributedString] = []
     private var current: NSMutableAttributedString = NSMutableAttributedString()
+//    struct Configuration {
+//        let singleLineMode
+//    }
 }
 
 extension ParagraphState {
@@ -23,13 +26,13 @@ extension ParagraphState {
     }
     internal consuming func finalize(
         environment: AttributeEnvironment,
-        initial: NSAttributedString
+        initial: NSAttributedString?
     ) -> NSMutableAttributedString {
         // - -
         lines.append(current)
         current = NSMutableAttributedString()
         // - -
-        let output = NSMutableAttributedString(attributedString: initial)
+        let output: NSMutableAttributedString = initial.map { NSMutableAttributedString(attributedString: $0) } ?? NSMutableAttributedString()
         // - -
         let baseAttributes = environment
             .systemAttributeDictionary(forEnvironment: .typesetting)
@@ -66,6 +69,25 @@ extension ParagraphState {
             output.append(line)
         }
         output.endEditing()
+        return output
+    }
+    internal consuming func untypedFinalize(lineBreakSeparator: NSAttributedString) -> NSMutableAttributedString {
+        // - -
+        lines.append(current)
+        current = NSMutableAttributedString()
+        // - -
+        let output: NSMutableAttributedString = .init()
+        // - -
+        output.beginEditing()
+        for (index, line) in self.lines.enumerated() {
+            let isLast = index + 1 == self.lines.count
+            output.append(line)
+            if !isLast {
+                output.append(lineBreakSeparator)
+            }
+        }
+        output.endEditing()
+        // - -
         return output
     }
 }

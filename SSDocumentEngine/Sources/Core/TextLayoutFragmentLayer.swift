@@ -116,14 +116,15 @@ extension TextLayoutFragmentLayer {
             ()
         case .table:
 //            scopeDrawInfo.indentLevels.append(.init(drawGraphic: true))
+            scopeDrawInfo.drawFrameBackground = .tableBlockLine
             ()
         case .paragraph: ()
         case .heading: ()
         case .htmlBlock:
 //            scopeDrawInfo.indentLevels.append(.init(drawGraphic: true))
-            scopeDrawInfo.drawFrameBackground = true
+            scopeDrawInfo.drawFrameBackground = .codeBlockLine
         case .codeBlock:
-            scopeDrawInfo.drawFrameBackground = true
+            scopeDrawInfo.drawFrameBackground = .codeBlockLine
 //            scopeDrawInfo.indentLevels.append(.init(drawGraphic: true))
         case .thematicBreak:
             drawThematicBreak(context: context)
@@ -132,12 +133,119 @@ extension TextLayoutFragmentLayer {
         }
     }
     private func renderScopeDrawInfo(context: CGContext, scopeDrawInfo: borrowing ScopeDrawInfo) {
-        if scopeDrawInfo.drawFrameBackground {
+        switch scopeDrawInfo.drawFrameBackground {
+        case .codeBlockLine:
             let fillColor = SSColorMap( light: #colorLiteral(red: 0.9677360897, green: 0.9677360897, blue: 0.9677360897, alpha: 0.9970813141), dark: #colorLiteral(red: 0.1407243465, green: 0.147121262, blue: 0.1621632409, alpha: 1) )
             context.saveGState()
             context.setFillColor(fillColor.adaptiveColor.cgColor)
             context.fill([bounds])
             context.restoreGState()
+        case .tableBlockLine:
+//            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9403009777, green: 0.9475113668, blue: 0.9643356081, alpha: 1), dark: #colorLiteral(red: 0.1407243465, green: 0.147121262, blue: 0.1621632409, alpha: 1) )
+//            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9826271663, green: 0.9826271663, blue: 0.9826271663, alpha: 1), dark: #colorLiteral(red: 0.1407243465, green: 0.147121262, blue: 0.1621632409, alpha: 1) )
+            let fillColor = SSColorMap( light: #colorLiteral(red: 0.9826271663, green: 0.9826271663, blue: 0.9826271663, alpha: 1), dark: #colorLiteral(red: 0.137793652, green: 0.1394267114, blue: 0.1432667565, alpha: 1) )
+            context.saveGState()
+            context.setFillColor(fillColor.adaptiveColor.cgColor)
+            let frame = layoutFragment.layoutFragmentFrame
+                .mapOrigin {
+                    .init(
+                        x: min($0.x + self.padding, 0),
+                        y: 0
+                    )
+                }
+                .mapSize {
+                    .init(
+                        width: max($0.width, self.bounds.width),
+                        height: $0.height
+                    )
+                }
+            context.fill([frame])
+            for line in self.layoutFragment.textLineFragments {
+                line.enumerateTableRowMetadata { meta, range, span in
+                    let (start, end) = span
+                    let _ = end
+//                    let borderColor = SSColorMap( light: #colorLiteral(red: 0.7966698894, green: 0.7966698894, blue: 0.7966698894, alpha: 1), dark: #colorLiteral(red: 0.3496662196, green: 0.3496662196, blue: 0.3496662196, alpha: 1) )
+                    let borderColor = SSColorMap( light: #colorLiteral(red: 0.7966698894, green: 0.7966698894, blue: 0.7966698894, alpha: 1), dark: #colorLiteral(red: 0.2526755988, green: 0.2674100212, blue: 0.3017903399, alpha: 1) )
+                    let drawTopLine: () -> () = {
+                        let path = CGMutablePath()
+                        path.move(to: .zero)
+                        path.addLine(to: .init(x: self.bounds.width, y: 0))
+                        context.addPath(path)
+                        context.setLineWidth(1.0)
+                        context.setStrokeColor(borderColor.adaptiveColor.cgColor)
+                        context.strokePath()
+                    }
+                    let drawBottomLine: () -> () = {
+                        let path = CGMutablePath()
+                        let yPos = self.bounds.height
+                        path.move(to: .init(x: 0, y: yPos))
+                        path.addLine(to: .init(x: self.bounds.width, y: yPos))
+                        context.addPath(path)
+                        context.setLineWidth(1.0)
+                        context.setStrokeColor(borderColor.adaptiveColor.cgColor)
+                        context.strokePath()
+                    }
+                    let drawVerticalRowStartLine: () -> () = {
+                        let borderWidth: CGFloat = 1
+                        let path = CGMutablePath()
+                        let startX = ((self.layoutFragment.layoutFragmentFrame.minX + self.bounds.minX)/2)+(meta.tabStopPadding*0.25)
+                        let posX = startX + self.padding + (borderWidth/2)
+                        path.move(to: .init(x: posX, y: 0))
+                        path.addLine(to: .init(x: posX, y: self.bounds.height))
+                        context.addPath(path)
+                        context.setLineWidth(borderWidth)
+                        context.setStrokeColor(borderColor.adaptiveColor.cgColor)
+                        context.strokePath()
+                    }
+                    let drawVerticalRowEndLine: () -> () = {
+                        let borderWidth: CGFloat = 1
+                        let path = CGMutablePath()
+//                        let startX = self.layoutFragment.layoutFragmentFrame.maxX+(meta.tabStopPadding*0.25)
+                        let startX = meta.terminalColumnPosition + ( meta.tabStopPadding * 0.75 )
+                        let posX = startX + self.padding + (borderWidth/2)
+                        path.move(to: .init(x: posX, y: 0))
+                        path.addLine(to: .init(x: posX, y: self.bounds.height))
+                        context.addPath(path)
+                        context.setLineWidth(borderWidth)
+                        context.setStrokeColor(borderColor.adaptiveColor.cgColor)
+                        context.strokePath()
+                    }
+                    let drawVerticalRowTabStopLine: (CGFloat) -> () = { tabPos in
+                        let borderWidth: CGFloat = 0.75
+                        let path = CGMutablePath()
+                        let posX = start.x + self.padding + tabPos + (borderWidth/2)
+                        path.move(to: .init(x: posX, y: 0))
+                        path.addLine(to: .init(x: posX, y: self.bounds.height))
+                        context.addPath(path)
+                        context.setLineWidth(borderWidth)
+                        context.setStrokeColor(borderColor.adaptiveColor.cgColor)
+                        context.strokePath()
+                    }
+                    drawVerticalRowStartLine()
+                    if !meta.endsWithEmptyColumn {
+                        drawVerticalRowEndLine()
+                    }
+                    for columnLocation in meta.columnLocations {
+//                        drawVerticalRowTabStopLine(columnLocation - (meta.tabStopPadding*0.25))
+                        let columnLocation = columnLocation - (meta.tabStopPadding*0.25)
+                        drawVerticalRowTabStopLine(columnLocation)
+                    }
+                    if meta.beginTableRow && meta.endTableRow {
+                        drawTopLine()
+                        drawBottomLine()
+                    } else if meta.beginTableRow {
+                        drawTopLine()
+                        drawBottomLine()
+                    } else if meta.endTableRow {
+                        drawBottomLine()
+                    } else {
+                        assert(meta.middleTableRow)
+                        drawBottomLine()
+                    }
+                }
+            }
+            context.restoreGState()
+        case .none: ()
         }
         for (index, _) in scopeDrawInfo.indentLevels.enumerated() {
             let offsetX = CGFloat(index * 20)
@@ -156,6 +264,17 @@ extension TextLayoutFragmentLayer {
             context.restoreGState()
         }
     }
+//    private func drawTableRowBackground(meta: SSTableRowMetadata) {
+//        if meta.beginTableRow && meta.endTableRow {
+//            
+//        } else if meta.beginTableRow {
+//            
+//        } else if meta.endTableRow {
+//            
+//        } else {
+//            assert(meta.middleTableRow)
+//        }
+//    }
     private func drawThematicBreak(context: CGContext) {
         let foregroundColor = SSColorMap( light: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 0.7552321862), dark: #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1) )
         context.saveGState()
@@ -177,10 +296,14 @@ extension TextLayoutFragmentLayer {
 
 fileprivate struct ScopeDrawInfo {
     var skipDrawLayoutFragment: Bool = false
-    var drawFrameBackground: Bool = false
+    var drawFrameBackground: FrameBackgroundType? = nil
     var indentLevels: [ IndentLevel ] = []
     struct IndentLevel {
         var drawGraphic: Bool
+    }
+    enum FrameBackgroundType {
+        case codeBlockLine
+        case tableBlockLine
     }
 }
 
@@ -353,3 +476,9 @@ extension TextLayoutFragmentLayer {
         }
     }
 }
+
+//fileprivate extension NSTextLayoutFragment {
+//    func enumerateRenderingAttributes(of key: NSAttributedString.Key, forEach: @escaping () -> ()) {
+//        
+//    }
+//}

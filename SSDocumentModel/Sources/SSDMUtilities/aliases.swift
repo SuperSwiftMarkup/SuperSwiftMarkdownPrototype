@@ -21,3 +21,5 @@ public typealias XColor = UIColor
 
 public typealias XUnderlineStyle = NSUnderlineStyle
 public typealias XMutableParagraphStyle = NSMutableParagraphStyle
+public typealias XTextTab = NSTextTab
+public typealias XTextAlignment = NSTextAlignment

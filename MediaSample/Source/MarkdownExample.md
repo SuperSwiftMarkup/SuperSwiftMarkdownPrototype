@@ -94,6 +94,66 @@
 >
 > Hard Line 5
 
+# Tables
+
+|A|B|
+|-|-|
+
+
+|A|B|C|
+|-|-|-|
+
+|A|B|C|
+|-|-|-|
+|D|E|F|
+
+Fruitcake cupcake gummies liquorice cotton candy toffee toffee.
+
+|A|B|C|D|E|
+|-|-|-|-|-|
+|F|G|H|I|J|
+
+Oat cake chocolate cake chocolate cake sweet roll dessert.
+
+| Syntax      | Description |
+| ----------- | ----------- |
+| Header      | Title       |
+| Paragraph   | Text        |
+
+Halvah jelly sweet roll chocolate cake fruitcake donut candy marzipan. Pudding brownie sweet cake gummi bears halvah.
+
+| Month    | Savings |
+| -------- | ------- |
+| January  | $250    |
+| February | $80     |
+| March    | $420    |
+
+Cotton candy dessert tiramisu muffin bear claw. Donut brownie bonbon shortbread gummi bears halvah gingerbread cotton candy.
+
+| Item              | In Stock | Price |
+| :---------------- | :------: | ----: |
+| Python Hat        |   `True`   | `23.99` |
+| SQL Hat           |   `True`   | `23.99` |
+| Codecademy Tee    |  `False`   | `19.99` |
+| Codecademy Hoodie |  `False`   | `42.99` |
+
+Gingerbread icing sweet biscuit toffee. Oat cake chocolate jujubes dessert muffin macaroon icing. Sugar plum pastry gummi bears pie carrot cake sesame snaps fruitcake lemon drops jelly beans.
+
+Lollipop powder sesame snaps topping topping donut cake.
+
+| Syntax      | Description | Test Text     |
+| :---        |    :----:   |          ---: |
+| Header      | Title       | Here's this   |
+| Paragraph   | Text        | And more      |
+
+Lollipop chocolate cake cake gingerbread chocolate bar wafer apple pie pudding. Cotton candy soufflé sugar plum pastry cookie caramels dragée candy canes.
+
+Markdown | Less | Pretty
+--- | --- | ---
+*Still* | `renders` | **nicely**
+1 | 2 | 3
+
+Pudding dragée jelly-o muffin pie bonbon dessert. Soufflé cheesecake halvah fruitcake caramels cheesecake danish chocolate. Bear claw lollipop chocolate bar carrot cake shortbread donut gummies sesame snaps pastry.
 
 # Headers
 
@@ -658,8 +718,8 @@ Markdown | Less | Pretty
 
 | Name     | Character |
 | ---      | ---       |
-| Backtick | `         |
-| Pipe     | \|        |
+| Backtick | `` ` ``         |
+| Pipe     | `` \ ``        |
 ```
 
 ## Showcase
@@ -691,20 +751,26 @@ Markdown | Less | Pretty
 | git status | List all new or modified files |
 | git diff | Show file differences that haven't been staged |
 
+Jujubes carrot cake toffee jujubes carrot cake candy.
+
 | Command | Description |
 | --- | --- |
 | `git status` | List all *new or modified* files |
 | `git diff` | Show file differences that **haven't been** staged |
+
+Wafer caramels jelly-o cake chocolate bar.
 
 | Left-aligned | Center-aligned | Right-aligned |
 | :---         |     :---:      |          ---: |
 | git status   | git status     | git status    |
 | git diff     | git diff       | git diff      |
 
+Pastry shortbread topping cheesecake chocolate cake. Biscuit danish carrot cake bonbon lollipop. Croissant sugar plum gummies sesame snaps jelly beans lollipop wafer.
+
 | Name     | Character |
 | ---      | ---       |
-| Backtick | `         |
-| Pipe     | \|        |
+| Backtick | `` ` ``         |
+| Pipe     | `` \ ``        |
 
 ------
 

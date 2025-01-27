@@ -181,7 +181,7 @@ extension DocumentView {
                 confined: false
             )
         }
-        updateLayout(direction: nil)
+        updateLayout(direction: .up)
     }
     fileprivate func _down() {
         let textSelectionNavigation = textLayoutManager!.textSelectionNavigation
@@ -194,7 +194,7 @@ extension DocumentView {
                 confined: false
             )
         }
-        updateLayout(direction: nil)
+        updateLayout(direction: .down)
     }
     fileprivate func _enter() {
         if VERBOSE_DEBUG_MODE {
@@ -445,6 +445,17 @@ extension DocumentView {
         if VERBOSE_DEBUG_MODE {
             print("TODO (moveToBeginningOfPreviousWord):", DocumentKeyBinding.moveToBeginningOfPreviousWord.shortcut.display, "\(DocumentKeyBinding.moveToBeginningOfPreviousWord.hotKey.display)")
         }
+        let textSelectionNavigation = textLayoutManager!.textSelectionNavigation
+        textLayoutManager!.textSelections = textLayoutManager!.textSelections.compactMap {
+            textSelectionNavigation.destinationSelection(
+                for: $0,
+                direction: .left,
+                destination: .word,
+                extending: false,
+                confined: false
+            )
+        }
+        updateLayout(direction: nil)
     }
 
     /// Move the insertion point to the end of the next word.
@@ -453,6 +464,17 @@ extension DocumentView {
         if VERBOSE_DEBUG_MODE {
             print("TODO (moveToEndOfNextWord):", DocumentKeyBinding.moveToEndOfNextWord.shortcut.display, "\(DocumentKeyBinding.moveToEndOfNextWord.hotKey.display)")
         }
+        let textSelectionNavigation = textLayoutManager!.textSelectionNavigation
+        textLayoutManager!.textSelections = textLayoutManager!.textSelections.compactMap {
+            textSelectionNavigation.destinationSelection(
+                for: $0,
+                direction: .right,
+                destination: .word,
+                extending: false,
+                confined: false
+            )
+        }
+        updateLayout(direction: nil)
     }
 
     // MARK: - Text Selection

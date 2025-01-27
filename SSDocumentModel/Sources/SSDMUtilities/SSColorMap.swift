@@ -51,10 +51,16 @@ extension SSColorMap {
             dark: self.dark.blended(withFraction: amount, of: other.dark) ?? self.dark
         )
     }
+    public var inversed: SSColorMap {
+        SSColorMap(light: dark, dark: light)
+    }
+    public var darkModeOnly: SSColorMap {
+        SSColorMap(light: dark, dark: dark)
+    }
 }
 
 extension SSColorMap {
-    public static let textColor: Self = Self(light: XColor.textColor, dark: XColor.textColor)
+    public static let textColor: Self = Self(light: #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), dark: #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1))
     public static let red: Self = Self(light: .systemRed, dark: .systemRed)
     public static let green: Self = Self(light: .systemGreen, dark: .systemGreen)
     public static let blue: Self = Self(light: .systemBlue, dark: .systemBlue)

@@ -40,9 +40,14 @@ extension AttributeEnvironment {
         private var fontWidth: SSStyle.FontWidth? = nil
         private var boldTextStyle: Bool? = nil
         private var italicTextStyle: Bool? = nil
-        private var foregroundColor: SSColorMap? = nil
+        private var foregroundColor: SSColorMap = ThemeDefaults.Colors.defaultTextForegroundColor
         private var backgroundColor: SSColorMap? = nil
         private var strikethroughMode: Bool? = nil
+        private var colorMode: ColorMode = .default
+        public enum ColorMode: Equatable {
+            case `default`
+            case darkModeOnly
+        }
     }
 }
 
@@ -71,6 +76,11 @@ extension AttributeEnvironment.StyleEnvironment {
         copy.fontWeight = fontWeight ?? self.fontWeight
         return copy
     }
+    internal func mapFontWeight(apply: @escaping (SSStyle.FontWeight) -> SSStyle.FontWeight) -> Self {
+        var copy = self
+        copy.fontWeight = apply(self.fontWeight)
+        return copy
+    }
     internal func with(fontDesign: SSStyle.FontDesign?) -> Self {
         var copy = self
         copy.fontDesign = fontDesign ?? self.fontDesign
@@ -96,6 +106,11 @@ extension AttributeEnvironment.StyleEnvironment {
         copy.foregroundColor = foregroundColor ?? self.foregroundColor
         return copy
     }
+    internal func mapForegroundColor(apply: @escaping (SSColorMap) -> SSColorMap) -> Self {
+        var copy = self
+        copy.foregroundColor = apply(self.foregroundColor)
+        return copy
+    }
     internal func with(backgroundColor: SSColorMap?, updateType: UpdateType = .preferThis) -> Self {
         var copy = self
         switch updateType {
@@ -111,6 +126,11 @@ extension AttributeEnvironment.StyleEnvironment {
     internal func with(strikethroughMode: Bool?) -> Self {
         var copy = self
         copy.strikethroughMode = strikethroughMode ?? self.strikethroughMode
+        return copy
+    }
+    internal func with(colorMode: ColorMode) -> Self {
+        var copy = self
+        copy.colorMode = colorMode
         return copy
     }
     internal enum UpdateType {
@@ -189,14 +209,17 @@ extension AttributeEnvironment.StyleEnvironment {
     internal var systemAttributeDictionary: NSAttributedString.AttributeDictionary {
         var attributes = NSAttributedString.AttributeDictionary(minimumCapacity: 10)
         attributes[.font] = systemFont
-        if let foregroundColor = foregroundColor {
-            let color: XColor = foregroundColor.adaptiveColor
-            attributes[.foregroundColor] = color
-        } else {
-            attributes[.foregroundColor] = ThemeDefaults.Colors.Block.htmlBlock.adaptiveColor
-        }
+//        if let foregroundColor = foregroundColor {
+//            
+//        } else {
+//            attributes[.foregroundColor] = ThemeDefaults.Colors.defaultTextForegroundColor
+//        }
+        
+        
+        attributes[.foregroundColor] = colorMode == .darkModeOnly ? foregroundColor.darkModeOnly.adaptiveColor : foregroundColor.adaptiveColor
+        
         if let backgroundColor = backgroundColor {
-            let color: XColor = backgroundColor.adaptiveColor
+            let color: XColor = colorMode == .darkModeOnly ? backgroundColor.darkModeOnly.adaptiveColor : backgroundColor.adaptiveColor
             attributes[.backgroundColor] = color
         }
         if let strikethroughMode = strikethroughMode, strikethroughMode == true {
@@ -323,4 +346,22 @@ extension AttributeEnvironment {
         }
         return false
     }
+    internal func mapSystemFont<T>(function: @escaping (XFont) -> T) -> T {
+        function(self.styleEnvironment.systemFont)
+    }
+}
+
+extension AttributeEnvironment {
+    var styledSpace: NSAttributedString {
+        let systemAttributes = self.systemAttributeDictionary(forEnvironment: .styling)
+        return NSAttributedString(string: " ", attributes: systemAttributes)
+    }
+    var styledNewline: NSAttributedString {
+        let systemAttributes = self.systemAttributeDictionary(forEnvironment: .styling)
+        return NSAttributedString(string: "\n", attributes: systemAttributes)
+    }
+//    var styledTab: NSAttributedString {
+//        let systemAttributes = self.systemAttributeDictionary(forEnvironment: .styling)
+//        return NSAttributedString(string: "\t", attributes: systemAttributes)
+//    }
 }
