@@ -4,6 +4,8 @@
 //
 //  Created by Colbyn Wadman on 1/16/25.
 //
+// https://github.com/SuperSwiftMarkup/SuperSwiftMarkdownPrototype/blob/main/LICENSE.md
+//
 
 import Foundation
 
