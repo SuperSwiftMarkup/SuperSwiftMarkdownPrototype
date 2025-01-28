@@ -66,7 +66,7 @@ editor in read only mode.
 ![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-preview-basic-1-light-mode.png)
 ![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-preview-basic-1-dark-mode.png)
 
-You can build a full spreadsheet application in terms of the low level markdown rendering engine that renders text in a more optimal manner based on what’s visible in the viewport with multi cursor/selection support. All that’s really missing is per-table horizontal scrolling support based on something like `CAScrollLayer` which may be available in a closed source commercial-only version.
+You can build a full spreadsheet application in terms of the low level markdown rendering engine that renders text in a more optimal manner based on what’s visible in the viewport with multi cursor/selection support (for very long table that can’t fit within their view dimensions). All that’s really missing is per-table horizontal scrolling support based on something like `CAScrollLayer` which may be available in a closed source commercial-only version.
 
 ----
 
