@@ -62,6 +62,12 @@ editor in read only mode.
 **With full text selection support:**
 ![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-selection-preview.png)
 
+**Some other simple examples:** 
+![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-preview-basic-1-light-mode.png)
+![blockquote preview 2 dark mode](screenshots/2025-1-27/tables-preview-basic-1-dark-mode.png)
+
+You can build a full spreadsheet application in terms of the low level markdown rendering engine that renders text in a more optimal manner based on what’s visible in the viewport with multi cursor/selection support. 
+
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
 
