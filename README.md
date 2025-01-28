@@ -68,6 +68,8 @@ editor in read only mode.
 
 You can build a full spreadsheet application in terms of the low level markdown rendering engine that renders text in a more optimal manner based on what’s visible in the viewport with multi cursor/selection support. 
 
+----
+
 **Debug Mode:**
 ![debug view light mode](screenshots/2025-1-23/debug-view-light-mode.png)
 
