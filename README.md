@@ -1,3 +1,9 @@
+# Current Development
+
+This project began as a simple proof of concept prototype, and now that the core rendering functionality has been proven viable I've since begun working on a fresh rewrite which you can checkout [over here]( https://github.com/SuperSwiftMarkup/SuperSwiftMarkup ).
+
+The code herein will remain as is to be used as a reference while building out the new libraries.  
+
 # A Better Markdown UI — WIP POC
 
 When it comes to rich text display, interaction and editing, platform specific APIs often fall short—especially for things that are not expressible in terms of paragraphs, such as tables and fenced code blocks. (Less so for lists and blockquotes but there is still a semantic mismatch.) While workarounds exists, the results are often subpar and for some use cases there are no good solutions.
