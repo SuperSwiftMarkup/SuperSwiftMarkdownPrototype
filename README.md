@@ -4,6 +4,8 @@ This project began as a simple proof of concept prototype, and now that the core
 
 The code herein will remain as is to be used as a reference while building out the new libraries.  
 
+**UPDATE:** I've written an associated [blog post about this project]( https://substack.com/home/post/p-156075576 ). Though quite brief it includes an interesting video on the multi-cursor behavior. A [medium version]( https://medium.com/@colbyn/a-better-macos-ios-markdown-renderer-proof-of-concept-d59b8b2d74fc ) is also available but the platform only support gifs. (One day I'll publish some YouTube video walkthroughs with commentary on my work—as the author with full technical knowledge of everything—just been super busy with the overall dev work.)
+
 # A Better Markdown UI — WIP POC
 
 When it comes to rich text display, interaction and editing, platform specific APIs often fall short—especially for things that are not expressible in terms of paragraphs, such as tables and fenced code blocks. (Less so for lists and blockquotes but there is still a semantic mismatch.) While workarounds exists, the results are often subpar and for some use cases there are no good solutions.
