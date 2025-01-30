@@ -8,7 +8,7 @@ The code herein will remain as is to be used as a reference while building out t
 
 When it comes to rich text display, interaction and editing, platform specific APIs often fall short—especially for things that are not expressible in terms of paragraphs, such as tables and fenced code blocks. (Less so for lists and blockquotes but there is still a semantic mismatch.) While workarounds exists, the results are often subpar and for some use cases there are no good solutions.
 
-Our goal is to build better iOS & macOS rich text views from the ground up that overcome the limitations of platform-specific text views, starting with the markdown format.
+The goal is to build better iOS & macOS rich text views from the ground up that overcome the limitations of platform-specific text views, starting with the markdown format.
 
 The overarching directive:
 - First class (cross platform) support for all markdown container blocks and leaf blocks, with uniform behavior concerning text selection and selection-based navigation.
@@ -97,7 +97,7 @@ layout fragments in the view.
 
 ## Meeting the expectations of iOS and macOS users
 
-Our goal is to provide a rich and intuitive text selection experience that meets the expectations of iOS and macOS users. This includes a comprehensive set of features that enhance usability and productivity. Here's what we aim to support:
+The goal is to provide a rich and intuitive text selection experience that meets the expectations of iOS and macOS users. This includes a comprehensive set of features that enhance usability and productivity as outlined in the following.
 
 ### Basic Text Selection
 - **Tap and Hold**: Select a word by tapping and holding on it.
